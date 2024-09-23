@@ -2,26 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 }
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode {
+  background-color: #12182A;
+  color: white;
+}
+
+/* Additional styles for elements in dark mode */
+.dark-mode .text-boldTextColor {
+  color: white;
+}
+
+.dark-mode .text-semiTextColor {
+  color: #b3b3b3; /* Lighter grey for semi text */
+}
+
+.dark-mode .bg-gray-100 {
+  background-color: #12182A;
+}
+
+
+/* Animation for the scrollign effect */
+/* .fadeInLeft {
+  transform: translateX(-50%);
+  opacity: 1 !important;
+}
+
+.fadeInRight {
+  transform: translateX(50%);
+  opacity: 1 !important;
+}
+
+.opacity-0 {
+  opacity: 0;
+} */
