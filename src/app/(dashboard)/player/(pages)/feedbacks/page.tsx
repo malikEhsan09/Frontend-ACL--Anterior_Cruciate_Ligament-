@@ -44,34 +44,6 @@ const reviews = [
   },
 ];
 
-export function TypewriterEffectDemo() {
-  const words = [
-    {
-      text: "What",
-    },
-    {
-      text: "Our",
-    },
-    {
-      text: "Client",
-    },
-    {
-      text: "Say",
-    },
-    {
-      text: "About",
-    },
-    {
-      text: "Us.",
-      className: "text-lightBlue dark:text-blue-500",
-    },
-  ];
-  return (
-    <div className="flex flex-col items-center justify-center h-[40rem] ">
-      <TypewriterEffect words={words} />
-    </div>
-  );
-}
 
 const words = [
   {
