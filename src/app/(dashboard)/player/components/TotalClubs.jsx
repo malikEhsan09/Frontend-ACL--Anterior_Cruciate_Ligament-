@@ -55,8 +55,8 @@ export default function TotalClubs() {
     <div className="bg-gray-100 p-4 rounded-lg">
       <h2 className="text-lg font-semibold mb-2">Total Clubs Reg</h2>
       <div className="flex items-center justify-between">
-        <span className="text-2xl font-bold text-lightBlue">{totalClubs}</span>
-        <span className="text-darkBlue text-3xl">
+        <span className="text-2xl font-bold text-green-600">{totalClubs}</span>
+        <span className="text-green-600 text-3xl">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-8 w-8"
@@ -76,7 +76,13 @@ export default function TotalClubs() {
       <div className="h-16">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData}>
-            <Bar dataKey="value" fill="#547ea8" />
+            <Bar
+              dataKey="value"
+              stroke="#10B981"
+              fill="#10B981"
+              type="monotone"
+              fillOpacity={0.5}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
