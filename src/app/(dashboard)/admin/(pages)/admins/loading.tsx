@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const Loading = () => {
-  return (
-    <div>
-     Admin page is loading
-    </div>
-  )
-}
+  return <div>All admin pages are loading !!!!</div>;
+};
 
-export default Loading
+export default Loading;
