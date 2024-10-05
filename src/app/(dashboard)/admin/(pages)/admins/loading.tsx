@@ -1,7 +1,7 @@
 import React from "react";
 
 const Loading = () => {
-  return <div>All admin pages are loading !!!!</div>;
+  return <div>Loader for the admin page !!!!</div>;
 };
 
 export default Loading;
