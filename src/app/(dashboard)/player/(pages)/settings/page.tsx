@@ -577,7 +577,7 @@ const Settings = ({ onUpdateProfileImage }) => {
     gender: "",
     nationality: "",
     phoneNumber: "",
-    image: null,
+    image: null as File | null,
     isMember: "",
     club: null, // Adding club information
   });
@@ -642,7 +642,7 @@ const Settings = ({ onUpdateProfileImage }) => {
     fetchProfileData();
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     // Calculate age when the date of birth is changed
@@ -655,10 +655,15 @@ const Settings = ({ onUpdateProfileImage }) => {
   };
 
   // Handle image change
-  const handleImageChange = (e) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setProfileInfo({ ...profileInfo, image: e.target.files[0] });
     }
+  };
+
+  // Toggle the editing state and open the modal
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
   };
 
   // Handle modal close
