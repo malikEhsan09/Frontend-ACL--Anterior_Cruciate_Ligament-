@@ -16,7 +16,7 @@ import {
   FaCheckCircle,
 } from "react-icons/fa"; // Importing icons
 import Image from "next/image";
-import "./style.css";
+// import "./style.css";
 
 interface Player {
   _id: string;
