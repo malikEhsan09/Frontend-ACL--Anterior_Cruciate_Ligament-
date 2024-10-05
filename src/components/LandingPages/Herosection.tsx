@@ -34,7 +34,7 @@ export default function HeroSection() {
             Embark on Your Journey to Healing with Expert ACL Care. Discover
             Your Roadmap to Recovery Today.
           </p>
-          <Button className="bg-buttonColor text-white hover:bg-blue-800 pr-6 md:pr-10 py-2 md:py-3">
+          <Button className="bg-buttonColor text-white hover:bg-darkBlue pr-6 md:pr-10 py-2 md:py-3">
             Lets Get Started →
           </Button>
         </div>

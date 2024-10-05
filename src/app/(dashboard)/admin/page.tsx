@@ -134,7 +134,7 @@ const Admin = () => {
   }
 
   return (
-    <div className="p-6 ml-[-4rem]">
+    <div className="py-6 px-4">
       {/* Statistics Section */}
       <div className="flex justify-between space-x-6 mb-6 w-full ">
         <StatsCard

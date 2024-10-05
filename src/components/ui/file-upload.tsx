@@ -27,10 +27,24 @@ const secondaryVariant = {
 
 export const FileUpload = ({ onChange }) => {
   const [files, setFiles] = useState<File[]>([]);
+  const [error, setError] = useState(null); // Error state to handle invalid files
   const fileInputRef = useRef(null);
 
+  const allowedExtensions = [".npy", ".pck"];
+
   const handleFileChange = (newFiles: File[]) => {
+    const file = newFiles[0];
+    const fileExtension = file.name.slice(
+      ((file.name.lastIndexOf(".") - 1) >>> 0) + 2
+    );
+
+    if (!allowedExtensions.includes(`.${fileExtension}`)) {
+      setError("Invalid file type. Only .npy and .pck files are allowed.");
+      return;
+    }
+
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    setError(null); // Clear error when valid file is uploaded
     onChange && onChange(newFiles);
   };
 
@@ -164,6 +178,10 @@ export const FileUpload = ({ onChange }) => {
                 variants={secondaryVariant}
                 className="absolute opacity-0 border border-dashed border-sky-400 inset-0 z-30 bg-transparent flex items-center justify-center h-32 mt-4 w-full max-w-[8rem] mx-auto rounded-md"
               ></motion.div>
+            )}
+
+            {error && (
+              <p className="mt-4 text-red-500 text-center font-bold">{error}</p>
             )}
           </div>
         </div>

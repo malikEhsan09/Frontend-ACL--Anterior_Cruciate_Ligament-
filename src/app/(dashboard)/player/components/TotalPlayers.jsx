@@ -30,15 +30,17 @@ export default function TotalPlayers() {
 
     try {
       const response = await fetch("http://localhost:8800/api/player", {
+        method: "GET",
         headers: headers,
       });
-      if (!response.ok) throw new Error("Failed to fetch players data");
-      const playersData = await response.json();
 
-      // Set the total number of players
+      if (!response.ok) throw new Error("Failed to fetch players data");
+
+      const playersData = await response.json();
       setTotalPlayers(playersData.length);
     } catch (error) {
-      setError(error.message);
+      console.error("Error:", error.message);
+      setError(error.message); // Display error to the user
     } finally {
       setLoading(false);
     }

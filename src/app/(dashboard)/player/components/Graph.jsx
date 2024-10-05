@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 
 // Custom legend with rounded dots
 const renderLegend = (props) => {
@@ -233,7 +233,7 @@ const ClubsOverview = () => {
         </div>
       </div>
 
-      {/* Stacked Bar Chart */}
+      {/* Bar Chart */}
       <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -246,7 +246,8 @@ const ClubsOverview = () => {
               tickLine={false}
               tickFormatter={abbreviateDay} // Format the day names to abbreviations
             />
-            <YAxis axisLine={false} tickLine={false} />
+            <YAxis axisLine={false} tickLine={false} allowDecimals={false} />{" "}
+            {/* Only whole numbers on Y-axis */}
             <Tooltip
               content={<CustomTooltip />}
               cursor={{ fill: "rgba(255,255,255,0.1)" }}

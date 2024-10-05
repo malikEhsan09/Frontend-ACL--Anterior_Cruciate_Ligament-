@@ -6,7 +6,7 @@ import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import football from "@/public/assets/football.svg";
 import Link from "next/link";
-import { FaCheckCircle } from "react-icons/fa"; // Importing check icon for alert
+import { FaCheckCircle, FaGoogle, FaFacebook } from "react-icons/fa"; // Import Google and Facebook icons
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -16,7 +16,7 @@ export default function Login() {
   const [success, setSuccess] = useState(false); // For determining alert type
   const router = useRouter();
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const loginData = {
@@ -75,6 +75,17 @@ export default function Login() {
       setSuccess(false);
       setOpen(true);
     }
+  };
+
+  // Google OAuth handler
+  const handleGoogleOAuth = () => {
+    // Redirect user to your backend OAuth route
+    window.location.href = "http://localhost:8800/api/auth/google";
+  };
+
+  // Facebook OAuth handler
+  const handleFacebookOAuth = () => {
+    window.location.href = "http://localhost:8800/api/auth/facebook";
   };
 
   return (
@@ -158,9 +169,29 @@ export default function Login() {
               Login
             </button>
           </form>
-          <div className="flex items-center justify-center my-4">
-            <span className="text-gray-500">or</span>
+
+          {/* Google OAuth button */}
+          <div className="my-4">
+            <button
+              className="w-full bg-white text-black py-3 rounded-lg flex items-center justify-center mb-3 hover:bg-gray-200 transition duration-200 text-lg font-semibold text-[16px] hover:cursor-pointer border border-black"
+              onClick={handleGoogleOAuth}
+            >
+              <FaGoogle className="mr-2 text-red-500" />
+              Continue with Google
+            </button>
           </div>
+
+          {/* Facebook OAuth button */}
+          <div className="mb-4">
+            <button
+              className="w-full bg-white text-black py-3 rounded-lg flex items-center justify-center hover:bg-gray-200 transition duration-200 text-lg font-semibold text-[16px] hover:cursor-pointer border border-black"
+              onClick={handleFacebookOAuth}
+            >
+              <FaFacebook className="mr-2 text-blue-600" />
+              Continue with Facebook
+            </button>
+          </div>
+
           <p className="mt-4 text-center text-gray-600">
             Don't have an account?{" "}
             <Link href={"/signup"} className="text-blue-600 hover:underline">

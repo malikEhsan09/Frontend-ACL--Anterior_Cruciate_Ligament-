@@ -61,7 +61,7 @@ const Topbar = ({
         className={`flex flex-col items-start
              // ${isSidebarCollapsed ? "" : ""} transition-all duration-300`}
       >
-        <a className="text-2xl font-bold">Player Dashboard</a>
+        <a className="text-2xl font-bold">Admin Dashboard</a>
         <a className="text-md font-semibold  text-onHover mt-1">{title}</a>
       </div>
 

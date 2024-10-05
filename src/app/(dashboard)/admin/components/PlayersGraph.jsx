@@ -279,7 +279,7 @@ const PlayersGraph = () => {
       {/* Heading for Player Registrations placed outside the shadow box */}
       <h2 className="text-2xl font-bold mb-4">Player Registrations</h2>
 
-      <div className="bg-white p-6 rounded-lg shadow-2xl w-full ">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full ">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center space-x-4">
             <div>

@@ -105,7 +105,7 @@ export default function ResetPassword() {
             <h2 className="text-3xl font-bold ml-4">Reset Your Password</h2>
           </div>
           <p className="text-gray-600 mb-6 text-center">
-            Input your email address to receive a reset link.
+            Input your email address to receive an OTP.
           </p>
           <form onSubmit={handleSubmit}>
             <div className="mb-4 relative">

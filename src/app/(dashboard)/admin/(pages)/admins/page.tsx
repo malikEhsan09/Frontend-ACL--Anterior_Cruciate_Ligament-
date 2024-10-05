@@ -6,27 +6,41 @@ import axios from "axios";
 const Admins = () => {
   const dataPerPage = 7; // Limit to 7 entries per page
   const [currentPage, setCurrentPage] = useState(1);
-  const [admins, setAdmins] = useState([]);
+  const [admins, setAdmins] = useState<Admin[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [sortOrder, setSortOrder] = useState("Newest");
+  const [loggedInAdminId, setLoggedInAdminId] = useState<string | null>(null); // To store the logged-in admin's ID
   const [newAdmin, setNewAdmin] = useState({
     name: "",
     phoneNumber: "",
     CNIC: "",
     image: null,
   });
-  const [editingAdmin, setEditingAdmin] = useState(null);
-  const [viewingAdmin, setViewingAdmin] = useState(null); // State for viewing admin details
+  interface Admin {
+    _id: string;
+    name: string;
+    phoneNumber: string;
+    CNIC: string;
+    image: File | null;
+    createdAt: string;
+    userID: { _id: string }; // Add userID property
+  }
+
+  const [editingAdmin, setEditingAdmin] = useState<Admin | null>(null);
+  const [viewingAdmin, setViewingAdmin] = useState<Admin | null>(null); // State for viewing admin details
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false); // State to control view modal visibility
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
-  const [adminToDelete, setAdminToDelete] = useState(null);
+  const [adminToDelete, setAdminToDelete] = useState<Admin | null>(null);
 
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
         const token = localStorage.getItem("authToken");
+        const userId = localStorage.getItem("userId"); // Fetch logged-in user's ID
+        setLoggedInAdminId(userId);
+
         const response = await axios.get("http://localhost:8800/api/admin", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -37,10 +51,14 @@ const Admins = () => {
         const sortedData =
           sortOrder === "Newest"
             ? fetchedAdmins.sort(
-                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                (a: { createdAt: string }, b: { createdAt: string }) =>
+                  new Date(b.createdAt).getTime() -
+                  new Date(a.createdAt).getTime()
               )
             : fetchedAdmins.sort(
-                (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+                (a: { createdAt: string }, b: { createdAt: string }) =>
+                  new Date(a.createdAt).getTime() -
+                  new Date(b.createdAt).getTime()
               );
 
         setAdmins(sortedData);
@@ -59,18 +77,18 @@ const Admins = () => {
     currentPage * dataPerPage
   );
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
   };
 
-  const handleSortChange = (e) => {
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOrder(e.target.value);
     setCurrentPage(1);
   };
 
-  const handleCreateAdmin = async (e) => {
+  const handleCreateAdmin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("name", newAdmin.name);
@@ -102,13 +120,27 @@ const Admins = () => {
     }
   };
 
-  const handleUpdateAdmin = async (e, adminId) => {
+  const handleUpdateAdmin = async (
+    e: React.FormEvent<HTMLFormElement>,
+    adminId: string
+  ) => {
     e.preventDefault();
+    if (loggedInAdminId !== adminId) {
+      // Add a check to ensure the logged-in user can only update their own info
+      console.log("You can only edit your own information.");
+      return;
+    }
     const formData = new FormData();
-    formData.append("name", editingAdmin.name);
-    formData.append("phoneNumber", editingAdmin.phoneNumber);
-    formData.append("CNIC", editingAdmin.CNIC);
-    if (editingAdmin.image) {
+    if (editingAdmin) {
+      formData.append("name", editingAdmin.name);
+    }
+    if (editingAdmin) {
+      formData.append("phoneNumber", editingAdmin.phoneNumber);
+    }
+    if (editingAdmin) {
+      formData.append("CNIC", editingAdmin.CNIC);
+    }
+    if (editingAdmin && editingAdmin.image) {
       formData.append("image", editingAdmin.image);
     }
 
@@ -158,7 +190,7 @@ const Admins = () => {
     }
   };
 
-  const openDeletePopup = (admin) => {
+  const openDeletePopup = (admin: Admin) => {
     setAdminToDelete(admin);
     setIsDeletePopupOpen(true);
   };
@@ -168,7 +200,7 @@ const Admins = () => {
     setAdminToDelete(null);
   };
 
-  const openViewAdminModal = (admin) => {
+  const openViewAdminModal = (admin: Admin) => {
     setViewingAdmin(admin);
     setIsViewModalOpen(true);
   };
@@ -178,26 +210,26 @@ const Admins = () => {
     setViewingAdmin(null);
   };
 
-  const headers = ["ID", "Image", "Name", "Phone", "CNIC", "Action"];
+  const headers = ["ID", "Image", "Name", "Phone", "CNIC", "Status", "Action"];
 
   if (isLoading) {
     return <div>Loading Admins...</div>;
   }
 
   return (
-    <div className="p-2 mt-2 ml-[-3rem]">
+    <div className="p-2 mt-2 ">
       <div className="flex justify-between items-start mb-3 bg-[#F0F0F0] p-2 rounded-t-2xl">
         <div className="flex flex-col">
           <div className="flex items-center mb-2">
             <div className="w-3 h-8 bg-[#152f86b2] rounded-md mr-3"></div>
             <h2 className="text-xl font-bold text-gray-800">Admin</h2>
           </div>
-          <button
-            className="text-md font-bold p-2 rounded-md text-white bg-lightBlue -mt-2 ml-3 hover:cursor-pointer"
+          {/* <button
+            className="text-md font-semibold p-1 rounded-md text-white bg-lightBlue mt-1 ml-3 hover:cursor-pointer"
             onClick={() => setIsModalOpen(true)}
           >
-            Add Admin Detail
-          </button>
+            Add New Admin
+          </button> */}
         </div>
         <div className="flex items-center">
           <label className="text-sm font-medium text-gray-600 mr-2">
@@ -245,6 +277,26 @@ const Admins = () => {
               <td className="py-3 px-6">{admin.name || "N/A"}</td>
               <td className="py-3 px-6">{admin.phoneNumber || "N/A"}</td>
               <td className="py-3 px-6">{admin.CNIC || "N/A"}</td>
+              {/* Status */}
+              <td className="py-3 px-6">
+                {console.log(
+                  "Admin User ID:",
+                  admin.userID._id,
+                  "Logged-in User ID:",
+                  localStorage.getItem("userId")
+                )}
+                {localStorage.getItem("userId") === admin.userID._id ? (
+                  <span className="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs">
+                    Active
+                  </span>
+                ) : (
+                  <span className="bg-red-200 text-red-800 py-1 px-3 rounded-full text-xs">
+                    Inactive
+                  </span>
+                )}
+              </td>
+
+              {/* Actions */}
               <td className="py-3 px-6 text-center">
                 <div className="flex justify-center space-x-3">
                   <button
@@ -253,7 +305,26 @@ const Admins = () => {
                   >
                     <Eye className="h-5 w-5" />
                   </button>
-                  <button
+                  {loggedInAdminId === admin.userID._id && (
+                    <>
+                      <button
+                        className="text-red-500 hover:text-red-700 bg-transparent hover:cursor-pointer"
+                        onClick={() => openDeletePopup(admin)}
+                      >
+                        <Trash className="h-5 w-5" />
+                      </button>
+                      <button
+                        className="text-lightBlue  bg-transparent hover:cursor-pointer"
+                        onClick={() => {
+                          setEditingAdmin(admin);
+                          setIsModalOpen(true); // Open modal for editing
+                        }}
+                      >
+                        <Edit3 className="h-5 w-5" />
+                      </button>
+                    </>
+                  )}
+                  {/* <button
                     className="text-red-500 hover:text-red-700 bg-transparent hover:cursor-pointer"
                     onClick={() => openDeletePopup(admin)}
                   >
@@ -267,7 +338,7 @@ const Admins = () => {
                     }}
                   >
                     <Edit3 className="h-5 w-5" />
-                  </button>
+                  </button> */}
                 </div>
               </td>
             </tr>
@@ -331,9 +402,6 @@ const Admins = () => {
               <p className="text-sm text-gray-500">
                 Phone: {viewingAdmin.phoneNumber}
               </p>
-              {/* <p className="text-sm text-gray-500">
-                Email: {viewingAdmin.email}
-              </p> */}
             </div>
             <div className="flex justify-end mt-4">
               <button
@@ -387,7 +455,7 @@ const Admins = () => {
             <form
               onSubmit={(e) =>
                 editingAdmin
-                  ? handleUpdateAdmin(e, editingAdmin._id)
+                  ? handleUpdateAdmin(e, editingAdmin.userID._id)
                   : handleCreateAdmin(e)
               }
             >
@@ -490,7 +558,7 @@ const Admins = () => {
                 </button>
                 <button
                   type="submit"
-                  className="bg-lightBlue text-white py-2 px-4 rounded hover:bg-blue-600"
+                  className="bg-buttonColor text-white py-2 px-4 rounded hover:bg-darkBlue"
                 >
                   {editingAdmin ? "Update Admin" : "Create Admin"}
                 </button>

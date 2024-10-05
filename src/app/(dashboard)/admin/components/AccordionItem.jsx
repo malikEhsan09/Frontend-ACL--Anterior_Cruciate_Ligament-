@@ -1,64 +1,36 @@
 "use client";
-import { useState } from "react";
-import { ChevronDown, MoreHorizontal } from "lucide-react";
 
-const AccordionItem = ({ notification, onMarkAsRead, onRemove }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const handleAccordionToggle = () => {
-    setIsOpen((prev) => !prev);
+const AccordionItem = ({ notification, onMarkAsRead, onOpenFeedback }) => {
+  const handleRead = () => {
+    onMarkAsRead(notification._id); // Mark this notification as read
   };
 
-  const handleMenuToggle = (e) => {
-    e.stopPropagation();
-    setIsMenuOpen((prev) => !prev);
+  const handleOpen = () => {
+    onOpenFeedback(notification.feedbackId); // Open the feedback page
   };
 
   return (
-    <div className="border-b relative">
-      <div
-        className="flex justify-between items-center p-4 cursor-pointer hover:bg-gray-200"
-        onClick={handleAccordionToggle}
-      >
-        <div className="flex items-center gap-2">
-          <ChevronDown
-            className={`w-4 h-4 transition-transform ${
-              isOpen ? "rotate-180" : ""
-            }`}
-          />
-          <span className="font-medium">{notification.message}</span>
-        </div>
-        <MoreHorizontal
-          className="w-5 h-5 cursor-pointer"
-          onClick={handleMenuToggle}
-        />
+    <div className="p-3 border-b hover:bg-gray-100 flex justify-between">
+      <div className="cursor-pointer" onClick={handleOpen}>
+        <p
+          className={`${notification.isRead ? "text-gray-400" : "text-black"}`}
+        >
+          {notification.message}
+        </p>
+        <p className="text-sm text-gray-500">{notification.time}</p>
       </div>
-
-      {isOpen && (
-        <div className="px-4 py-2 bg-gray-100">
-          <p className="text-sm text-gray-500">{notification.time}</p>
+      <div className="relative">
+        {/* Three-dot menu for marking as read */}
+        <button className="text-gray-500 hover:text-black">•••</button>
+        <div className="absolute right-0 mt-2 bg-white shadow-md rounded-lg p-2 z-50">
+          <button
+            className="text-sm text-blue-500 hover:underline"
+            onClick={handleRead}
+          >
+            Mark as read
+          </button>
         </div>
-      )}
-
-      {isMenuOpen && (
-        <div className="absolute right-4 top-10 w-32 bg-white shadow-lg rounded-lg z-50">
-          <ul>
-            <li
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => onMarkAsRead(notification.id)}
-            >
-              Mark as Read
-            </li>
-            <li
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => onRemove(notification.id)}
-            >
-              Remove
-            </li>
-          </ul>
-        </div>
-      )}
+      </div>
     </div>
   );
 };

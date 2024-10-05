@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
 
 const Results = () => {
-  const dataPerPage = 7; // Limit to 7 entries per page
+  const dataPerPage = 7;
   const [currentPage, setCurrentPage] = useState(1);
   const [mriFiles, setMriFiles] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
@@ -12,11 +12,11 @@ const Results = () => {
   const [sortOrder, setSortOrder] = useState("Newest");
 
   useEffect(() => {
-    const fetchMriFilesAndAssessmentResults = async () => {
+    const fetchData = async () => {
       try {
         const authToken = localStorage.getItem("authToken");
 
-        // Fetch MRI files
+        // Fetch MRI files for the logged-in player
         const mriFilesResponse = await axios.get(
           "http://localhost:8800/api/mriFile",
           {
@@ -26,9 +26,7 @@ const Results = () => {
           }
         );
 
-        const fetchedMriFiles = mriFilesResponse.data;
-
-        // Fetch assessment results
+        // Fetch the assessment results
         const assessmentResultsResponse = await axios.get(
           "http://localhost:8800/api/aclAssessmentResult",
           {
@@ -38,16 +36,20 @@ const Results = () => {
           }
         );
 
-        const assessmentResults = assessmentResultsResponse.data;
+        const fetchedMriFiles = mriFilesResponse.data;
+        const fetchedAssessmentResults = assessmentResultsResponse.data;
 
-        // Merge MRI files with their corresponding assessment results
-        const mergedData = fetchedMriFiles.map((file) => {
-          const assessment = assessmentResults.find(
-            (result) => result.mriFileId === file._id
+        console.log("Fetched MRI files:", fetchedMriFiles);
+        console.log("Fetched assessment results:", fetchedAssessmentResults);
+
+        // Merge MRI files and assessment results based on mriFileId
+        const mergedData = fetchedMriFiles.map((mriFile) => {
+          const assessmentResult = fetchedAssessmentResults.find(
+            (result) => result.mriFileId === mriFile._id
           );
           return {
-            ...file,
-            assessmentResult: assessment || null, // Add the assessment result if available
+            ...mriFile,
+            assessmentResult: assessmentResult || {},
           };
         });
 
@@ -73,7 +75,7 @@ const Results = () => {
       }
     };
 
-    fetchMriFilesAndAssessmentResults();
+    fetchData();
   }, [sortOrder]);
 
   const currentData = mriFiles.slice(
@@ -94,7 +96,7 @@ const Results = () => {
 
   const headers = [
     "Invoice ID",
-    "File Name",
+    "Results",
     "Format",
     "Date of Report",
     "Status",
@@ -106,14 +108,14 @@ const Results = () => {
   }
 
   return (
-    <div className="p-2 ">
+    <div className="p-2">
       <div className="flex justify-between items-start mb-3 bg-[#F4F4F2] p-2 rounded-t-lg">
         <div className="flex flex-col">
           <div className="flex items-center mb-2">
             <div className="w-3 h-8 bg-[#152f86b2] rounded-md mr-3"></div>
             <h2 className="text-xl font-bold text-gray-800">Uploaded MRI</h2>
           </div>
-          <p className="text-sm text-gray-500 -mt-2 ml-7">Results</p>
+          <p className="text-md  text-lightBlue -mt-2 ml-7">Results</p>
         </div>
         <div className="flex items-center">
           <label className="text-sm font-medium text-gray-600 mr-2">
@@ -154,18 +156,86 @@ const Results = () => {
                 <input type="checkbox" />
               </td>
               <td className="py-3 px-6 text-blue-600 font-bold">{row._id}</td>
-              <td className="py-3 px-6">{row.fileName || "MRI Report"}</td>
+              <td className="py-3 px-6">
+                {(() => {
+                  const status =
+                    row.assessmentResult.assessmentResult || "Pending";
+                  let statusClass = "";
+                  let statusColor = "";
+                  let displayStatus = status; // New variable for simplified status
+
+                  if (status === "Healthy") {
+                    statusClass = "bg-green-100 text-green-800";
+                    statusColor = "border-green-500";
+                  } else if (
+                    status === "ACL Tear" ||
+                    status === "Complete ACL Tear OR Completely Ruptured"
+                  ) {
+                    statusClass = "bg-red-100 text-red-800";
+                    statusColor = "border-red-500";
+                  } else if (
+                    status === "Partial ACL Tear OR Partially Injured"
+                  ) {
+                    statusClass = "bg-yellow-100 text-yellow-800";
+                    statusColor = "border-yellow-500";
+                    displayStatus = "Partially Injured"; // Simplified text
+                  } else {
+                    statusClass = "bg-gray-100 text-gray-800"; // Default color for pending or unknown statuses
+                  }
+
+                  return (
+                    <span
+                      className={`${statusClass} ${statusColor} px-2 py-1 rounded-md text-sm font-medium border whitespace-nowrap`}
+                    >
+                      {displayStatus}
+                    </span>
+                  );
+                })()}
+              </td>
               <td className="py-3 px-6">{row.fileType}</td>
               <td className="py-3 px-6">
                 {new Date(row.createdAt).toLocaleDateString()}
               </td>
               <td className="py-3 px-6">
-                <span className="bg-green-100 text-green-800 px-2 py-1 rounded-md text-sm font-medium">
-                  {row.status || "Pending"}
-                </span>
+                {(() => {
+                  const isAssigned = row.assessmentResult.doctorId
+                    ? "Assigned"
+                    : "Pending";
+                  const status =
+                    row.assessmentResult.assessmentResult || "Pending";
+                  let statusClass = "";
+                  let statusColor = "";
+
+                  if (status === "Healthy") {
+                    statusClass = "bg-green-100 text-green-800";
+                    statusColor = "border-green-500";
+                  } else if (
+                    status === "ACL Tear" ||
+                    status === "Complete ACL Tear OR Completely Ruptured"
+                  ) {
+                    statusClass = "bg-red-100 text-red-800";
+                    statusColor = "border-red-500";
+                  } else if (
+                    status === "Partial ACL Tear OR Partially Injured"
+                  ) {
+                    statusClass = "bg-yellow-100 text-yellow-800";
+                    statusColor = "border-yellow-500";
+                  } else {
+                    statusClass = "bg-gray-100 text-gray-800"; // Default color for pending or unknown statuses
+                  }
+
+                  return (
+                    <span
+                      className={`${statusClass} ${statusColor} px-2 py-1 rounded-md text-sm font-medium border whitespace-nowrap`}
+                    >
+                      {isAssigned === "Assigned" ? "Assigned" : "Pending"}
+                    </span>
+                  );
+                })()}
               </td>
+
               <td className="py-3 px-6 flex items-center justify-end">
-                {row.assessmentResult?.reportPath ? (
+                {row.assessmentResult.reportPath ? (
                   <a
                     href={`http://localhost:8800/api/mriFile${row.assessmentResult.reportPath}`}
                     className="text-blue-600 bg-gray-200 p-2 rounded-md whitespace-nowrap"

@@ -267,7 +267,7 @@ const UploadMriFile = () => {
           }
         );
 
-        const presignedUrl = presignedUrlResponse.data.data; // extracting the URL 
+        const presignedUrl = presignedUrlResponse.data.data; // extracting the URL
         console.log("Presigned URL:", presignedUrl);
 
         if (!presignedUrl) {
@@ -294,7 +294,7 @@ const UploadMriFile = () => {
             headers: {
               Authorization: `Bearer ${authToken}`,
             },
-            timeout: 60000, // 60 seconds timeout
+            timeout: 60000000, // 60 seconds timeout
           }
         );
 
@@ -330,10 +330,7 @@ const UploadMriFile = () => {
 
   return (
     <>
-      <div
-        className="flex items-center cursor-pointer mb-2 ml-5"
-        onClick={goBack}
-      >
+      <div className="flex items-center cursor-pointer mb-2 " onClick={goBack}>
         <ChevronLeft className="h-6 w-6 text-gray-600" />
         <p className="ml- text-gray-600 font-bold">Back</p>
       </div>
@@ -369,7 +366,7 @@ const UploadMriFile = () => {
               assessmentResults.assessmentResult.assessmentResult
             )}`}
           >
-            <strong className="text-lg font-bold text-white">Result:</strong>{" "}
+            <strong className="text-lg font-bold text-black">Result:</strong>{" "}
             {assessmentResults.assessmentResult.assessmentResult}
           </p>
 

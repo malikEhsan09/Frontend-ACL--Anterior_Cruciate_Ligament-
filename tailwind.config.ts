@@ -9,6 +9,7 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+		 scrollbar: ['rounded'],
   		colors: {
   			background: 'var(--background)',
   			foreground: 'var(--foreground)',
@@ -56,6 +57,26 @@ const config: Config = {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"),  function ({ addUtilities }) {
+      addUtilities({
+        '.scrollbar-thin': {
+          'scrollbar-width': 'thin',
+          '&::-webkit-scrollbar': {
+            width: '8px', // Adjust as needed
+          },
+          '&::-webkit-scrollbar-track': {
+            'background-color': '#f1f1f1',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            'background-color': '#888',
+            'border-radius': '10px',
+            'border': '2px solid #f1f1f1',
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            'background-color': '#555',
+          },
+        },
+      });
+    },],
 };
 export default config;

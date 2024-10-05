@@ -26,7 +26,20 @@ const Clubs = () => {
     foundedYear: "",
     clubLogo: null,
   });
-  const [editingClub, setEditingClub] = useState(null);
+  interface Club {
+    _id: string;
+    clubName: string;
+    clubLocation: string;
+    maxCapacity: number;
+    description: string;
+    foundedYear: string;
+    clubLogo: string | null;
+    numOfMembers: number;
+    isActive: boolean;
+    players: string[];
+  }
+  
+  const [editingClub, setEditingClub] = useState<Club | null>(null);
   const [viewingClub, setViewingClub] = useState(null); // State for viewing club details
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false); // State to control view modal visibility
@@ -55,10 +68,14 @@ const Clubs = () => {
         const sortedData =
           sortOrder === "Newest"
             ? fetchedClubs.sort(
-                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                (a: { createdAt: string }, b: { createdAt: string }) =>
+                  new Date(b.createdAt).getTime() -
+                  new Date(a.createdAt).getTime()
               )
             : fetchedClubs.sort(
-                (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+                (a: { createdAt: string }, b: { createdAt: string }) =>
+                  new Date(a.createdAt).getTime() -
+                  new Date(b.createdAt).getTime()
               );
 
         setClubs(sortedData);
@@ -77,25 +94,25 @@ const Clubs = () => {
     currentPage * dataPerPage
   );
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     if (newPage > 0 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
   };
 
-  const handleSortChange = (e) => {
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOrder(e.target.value);
     setCurrentPage(1);
   };
 
-  const handleCreateClub = async (e) => {
+  const handleCreateClub = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // const token = localStorage.getItem("authToken");
     const adminId = localStorage.getItem("userId");
     const formData = new FormData();
     formData.append("clubName", newClub.clubName);
     formData.append("clubLocation", newClub.clubLocation);
-    formData.append("numOfMembers", 0); // Set the initial number of members to 0
+    formData.append("numOfMembers", "0"); // Set the initial number of members to 0
     formData.append("maxCapacity", newClub.maxCapacity);
     formData.append("description", newClub.description);
     formData.append("foundedYear", newClub.foundedYear);
@@ -148,7 +165,7 @@ const Clubs = () => {
   };
 
   const handleAddPlayer = async () => {
-    if (!playerEmail && !selectedPlayerId) {
+    if (!playerEmail && !selectedClubId) {
       alert("Please provide a valid email or player ID.");
       return;
     }
@@ -160,14 +177,11 @@ const Clubs = () => {
         return;
       }
 
-      // Create the request payload dynamically depending on whether email or playerId is provided
-      const requestBody = playerEmail
-        ? { email: playerEmail, clubId: selectedClubId }
-        : { playerId: selectedPlayerId, clubId: selectedClubId };
+      const requestBody = { email: playerEmail, clubId: selectedClubId };
 
       const response = await axios.post(
         "http://localhost:8800/api/club/assignPlayer",
-        requestBody, // Sending either clubId and email or clubId and playerId
+        requestBody,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -177,33 +191,36 @@ const Clubs = () => {
       );
 
       if (response.status === 200) {
-        // Trigger success alert
         setSuccess(true);
         setAlertMessage("Player assigned successfully!");
         setOpenAlert(true);
-        setTimeout(() => setOpenAlert(false), 3000); // Close alert after 3 seconds
+        setTimeout(() => setOpenAlert(false), 3000);
+        closePlayerModal(); // Close modal after successful assignment
       } else {
         setSuccess(false);
         setAlertMessage(response.data.message);
         setOpenAlert(true);
-        setTimeout(() => setOpenAlert(false), 3000); // Close alert after 3 seconds
+        setTimeout(() => setOpenAlert(false), 3000);
       }
     } catch (error) {
-      if (error.response) {
+      if (axios.isAxiosError(error) && error.response) {
         console.error("Error assigning player:", error.response.data);
         setSuccess(false);
         setAlertMessage(error.response.data.message);
         setOpenAlert(true);
-        setTimeout(() => setOpenAlert(false), 3000); // Close alert after 3 seconds
-      } else if (error.request) {
+        setTimeout(() => setOpenAlert(false), 3000);
+      } else if (axios.isAxiosError(error) && error.request) {
         console.error("No response from server:", error.request);
       } else {
-        console.error("Error in request setup:", error.message);
+        console.error(
+          "Error in request setup:",
+          axios.isAxiosError(error) && error.message
+        );
       }
     }
   };
 
-  const handleGenerateInviteLink = async (clubId) => {
+  const handleGenerateInviteLink = async (clubId: string) => {
     try {
       const token = localStorage.getItem("authToken");
 
@@ -223,15 +240,19 @@ const Clubs = () => {
     }
   };
 
-  const handleUpdateClub = async (e, clubId) => {
+  const handleUpdateClub = async (e: React.FormEvent<HTMLFormElement>, clubId: string) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("clubName", editingClub.clubName);
-    formData.append("clubLocation", editingClub.clubLocation);
+    if (editingClub) {
+      formData.append("clubName", editingClub.clubName);
+    }
+    if (editingClub) {
+      formData.append("clubLocation", editingClub.clubLocation);
+    }
     formData.append("maxCapacity", editingClub.maxCapacity);
     formData.append("description", editingClub.description);
     formData.append("foundedYear", editingClub.foundedYear);
-    if (editingClub.clubLogo) {
+    if (editingClub && editingClub.clubLogo) {
       formData.append("clubLogo", editingClub.clubLogo);
     }
 
@@ -322,7 +343,7 @@ const Clubs = () => {
   }
 
   return (
-    <div className="p-2 mt-2 ml-[-3rem]">
+    <div className="p-2 mt-2 ">
       <div className="flex justify-between items-start mb-3 bg-[#F0F0F0] p-2 rounded-t-2xl">
         <div className="flex flex-col">
           <div className="flex items-center mb-2">
@@ -330,7 +351,7 @@ const Clubs = () => {
             <h2 className="text-xl font-bold text-gray-800">Clubs</h2>
           </div>
           <button
-            className="text-md font-bold p-2 rounded-md text-white bg-lightBlue -mt-2 ml-3 hover:cursor-pointer"
+            className="text-md font-semibold px-2 p-1 rounded-md text-white bg-lightBlue mt-1 ml-3 hover:cursor-pointer hover:bg-[#4681BCFF ] "
             onClick={() => setIsModalOpen(true)}
           >
             Add Club
@@ -350,7 +371,7 @@ const Clubs = () => {
           </select>
         </div>
       </div>
-      
+
       {/* Custom Alert */}
       {openAlert && (
         <div className="fixed top-0 left-0 right-0 bg-white border border-gray-200 shadow-lg p-4 text-center mx-auto max-w-xl z-50 animate-slide-down rounded-lg">
@@ -369,7 +390,7 @@ const Clubs = () => {
         </div>
       )}
 
-      <table className="min-w-full bg-white border border-gray-200 rounded-md">
+      <table className="min-w-full bg-white border border-gray-200 rounded-md mt-[-1rem]">
         <thead className="bg-gray-50">
           <tr>
             {headers.map((header) => (
@@ -382,7 +403,7 @@ const Clubs = () => {
             ))}
           </tr>
         </thead>
-        <tbody className="text-gray-700">
+        <tbody className="text-gray-700 -mt-[-12]">
           {currentData.map((club, index) => (
             <tr key={index} className="border-t">
               <td className="py-3 px-6 text-blue-600 font-bold">{index + 1}</td>
@@ -432,12 +453,12 @@ const Clubs = () => {
                     <UserPlus className="h-5 w-5" />
                   </button>
                   {/* Generate Invite Button */}
-                  <button
+                  {/* <button
                     className="text-lightBlue hover:cursor-pointer bg-transparent font-bold"
                     onClick={() => handleGenerateInviteLink(club._id)}
                   >
                     Generate Invite
-                  </button>
+                  </button> */}
                 </div>
               </td>
             </tr>
@@ -581,7 +602,7 @@ const Clubs = () => {
                 Cancel
               </button>
               <button
-                className="bg-lightBlue text-white py-2 px-4 rounded hover:bg-blue-600"
+                className="bg-buttonColor text-white py-2 px-4 rounded  hover:bg-darkBlue"
                 onClick={handleAddPlayer}
               >
                 Assign Player
@@ -800,3 +821,11 @@ const Clubs = () => {
 };
 
 export default Clubs;
+
+
+
+
+
+
+
+
