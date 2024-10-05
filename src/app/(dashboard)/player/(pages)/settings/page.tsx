@@ -41,7 +41,7 @@ const Settings = () => {
     gender: "",
     nationality: "",
     phoneNumber: "",
-    image: null,
+    image: null as File | null,
     isMember: "",
     club: null, // Adding club information
   });
@@ -100,14 +100,16 @@ const Settings = () => {
     fetchProfileData();
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProfileInfo({ ...profileInfo, [name]: value });
   };
 
   // Handle image change
-  const handleImageChange = (e) => {
-    setProfileInfo({ ...profileInfo, image: e.target.files[0] });
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setProfileInfo({ ...profileInfo, image: e.target.files[0] });
+    }
   };
 
   // Toggle the editing state and open the modal
