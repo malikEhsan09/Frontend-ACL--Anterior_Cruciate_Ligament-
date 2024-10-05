@@ -34,13 +34,18 @@ const Admins = () => {
         });
 
         const fetchedAdmins = response.data;
+        type Admin = {
+          createdAt: string;
+          // Add other properties of the admin object here if needed
+        };
+
         const sortedData =
           sortOrder === "Newest"
             ? fetchedAdmins.sort(
-                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                (a: Admin, b: Admin) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
               )
             : fetchedAdmins.sort(
-                (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+                (a: Admin, b: Admin) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
               );
 
         setAdmins(sortedData);
