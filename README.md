@@ -3,7 +3,7 @@ Here’s the complete `README.md` file, incorporating the core functionality you
 ```md
 # ACL Tear Detection
 
-This is a full-stack platform built with **Next.js**, **TypeScript**, **ShadCN UI**, **Acertinity UI**, **Lucide React**, and **Tailwind CSS**. The platform provides players with an MRI-based assessment for ACL injuries, offers personalized exercise plans for recovery, and integrates posture detection using ML to ensure proper form during exercises. Players can also book appointments with doctors for rechecking and validating progress through reports.
+This is a full-stack platform built with  Next.js, TypeScript, ShadCN UI, Acertinity UI, Lucide React, and Tailwind CSS. The platform provides players with an MRI-based assessment for ACL injuries, offers personalized exercise plans for recovery, and integrates posture detection using ML to ensure proper form during exercises. Players can also book appointments with doctors for rechecking and validating progress through reports.
 
 ## 🚀 Getting Started
 
