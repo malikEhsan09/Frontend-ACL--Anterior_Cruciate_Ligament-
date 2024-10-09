@@ -18,7 +18,7 @@ import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import logo from "@/public/assets/logo.svg";
-// import "./sidebar.css";
+import "./sidebar.css";
 
 interface SidebarProps {
   isCollapsed?: boolean;
