@@ -131,7 +131,7 @@ const Sidebar = ({
               />
             </div>
             {!isCollapsed && (
-              <div className="text-white text-center mt-2 text-sm font-semibold">
+              <div className="text-[#fff] text-center mt-2 text-lg font-bold">
                 ACL Tear Detector
               </div>
             )}
