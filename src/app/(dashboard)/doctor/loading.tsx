@@ -37,7 +37,6 @@ const Loader: React.FC = () => {
   );
 };
 
-// Styled components with keyframes for the loader's animation
 const blobGrow = keyframes`
   0%, 39% {
     transform: scale(0) translate(-50%, -50%);
