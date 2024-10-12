@@ -158,14 +158,19 @@ const Sidebar = ({
                   </div>
                 </TooltipTrigger>
                 {isCollapsed && (
-                  <TooltipContent side="right">{item.name}</TooltipContent>
+                  <TooltipContent
+                    side="right"
+                    className="bg-[#2a4165] text-white border-[#2a4165]"
+                  >
+                    {item.name}
+                  </TooltipContent>
                 )}
               </Tooltip>
             ))}
           </div>
 
           {/* Sidebar Bottom - Logout */}
-          <div className="mt-auto p-4">
+          <div className="mt-auto">
             <Tooltip>
               <TooltipTrigger asChild>
                 <div
@@ -179,7 +184,12 @@ const Sidebar = ({
                 </div>
               </TooltipTrigger>
               {isCollapsed && (
-                <TooltipContent side="right">Logout</TooltipContent>
+                <TooltipContent
+                  side="right"
+                  className="bg-[#2a4165] text-white border-[#2a4165]"
+                >
+                  Logout
+                </TooltipContent>
               )}
             </Tooltip>
 
