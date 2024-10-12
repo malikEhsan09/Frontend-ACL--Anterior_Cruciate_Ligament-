@@ -4,7 +4,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Wrench,
-  // Image as ImageIcon,
   AlertCircle,
 } from "lucide-react";
 import Image from "next/image";
@@ -193,13 +192,6 @@ const Sidebar = ({
               )}
             </Tooltip>
 
-            {/* <SidebarItem
-              icon={<RiLogoutCircleLine size={24} />}
-              name="Logout"
-              isCollapsed={isCollapsed}
-              onClick={handleLogout}
-              isActive={pathname === "/logout"}
-            /> */}
           </div>
         </div>
 
@@ -218,44 +210,5 @@ const Sidebar = ({
     </TooltipProvider>
   );
 };
-
-// interface SidebarItemProps {
-//   icon: React.ReactNode;
-//   name: string;
-//   isCollapsed: boolean;
-//   onClick: () => void;
-//   isActive: boolean;
-// }
-
-// const SidebarItem = ({
-//   icon,
-//   name,
-//   isCollapsed,
-//   onClick,
-//   isActive,
-// }: SidebarItemProps) => {
-//   const [showTooltip, setShowTooltip] = useState(false);
-
-//   return (
-//     <div
-//       className={`flex items-center p-4 transition-all duration-300 ${
-//         isCollapsed ? "justify-center" : "justify-start"
-//       } relative group rounded-lg cursor-pointer ${
-//         isActive ? "bg-[#41608F]" : "hover:bg-onHover" // Change color to active color (e.g., #41608F) for active state and hover color for non-active
-//       } text-white`}
-//       onClick={onClick}
-//       onMouseEnter={() => setShowTooltip(true)}
-//       onMouseLeave={() => setShowTooltip(false)}
-//     >
-//       <div>{icon}</div>
-//       {!isCollapsed && <span className="ml-4 text-sm">{name}</span>}
-//       {isCollapsed && showTooltip && (
-//         <div className="absolute left-full top-1/2 transform -translate-y-1/2 w-auto p-2 ml-2 rounded bg-gray-800 text-white transition-opacity duration-300 shadow-lg z-50">
-//           {name}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
 
 export default Sidebar;
