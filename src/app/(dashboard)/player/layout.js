@@ -62,6 +62,7 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
+import ChatBot from "./components/ChatBot";
 import { Inter } from "next/font/google";
 import { usePathname } from "next/navigation";
 import "../../globals.css";
@@ -178,6 +179,7 @@ export default function PlayerLayout({ children }) {
                   onUpdateProfileImage: updateProfileImage, // Pass the updateProfileImage function to children
                 })
               : children}
+            <ChatBot />
           </main>
         </div>
       </div>
