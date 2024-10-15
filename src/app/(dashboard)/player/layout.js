@@ -60,7 +60,7 @@
 
 "use client";
 import React, { useState, useEffect } from "react";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/Sidebar.tsx";
 import Topbar from "./components/Topbar";
 import ChatBot from "./components/ChatBot";
 import { Inter } from "next/font/google";
