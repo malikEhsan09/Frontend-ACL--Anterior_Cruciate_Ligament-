@@ -16,7 +16,12 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import logo from "@/public/assets/logo.svg"; // Assuming you have this
 
-const Sidebar = ({ onToggle, isCollapsed }) => {
+interface SidebarProps {
+  onToggle: (collapsed: boolean) => void;
+  isCollapsed: boolean;
+}
+
+const Sidebar = ({ onToggle, isCollapsed }: SidebarProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -24,7 +29,7 @@ const Sidebar = ({ onToggle, isCollapsed }) => {
     onToggle(!isCollapsed); // Notify parent component about sidebar toggle
   };
 
-  const handleNavigation = (path) => {
+  const handleNavigation = (path: string) => {
     router.push(path); // Navigate to the desired path
   };
 
