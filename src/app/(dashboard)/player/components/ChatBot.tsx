@@ -1,4 +1,5 @@
 "use client";
+import "tailwindcss/tailwind.css";
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,15 @@ export default function ChatBot() {
   ]);
   const [input, setInput] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  React.useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSend = () => {
     if (input.trim()) {
@@ -42,7 +52,7 @@ export default function ChatBot() {
       setInput("");
       setIsLoading(true);
 
-      // Simulate bot response after 1 second
+      // Simulate bot response after 2 seconds
       setTimeout(() => {
         setMessages((prevMessages) => [
           ...prevMessages,
@@ -52,21 +62,21 @@ export default function ChatBot() {
           },
         ]);
         setIsLoading(false);
-      }, 1000);
+      }, 2000);
     }
   };
 
   return (
     <TooltipProvider>
-      <div className="fixed bottom-4 right-4 z-50 h-auto">
+      <div className="fixed bottom-4 right-4 z-50">
         {!isOpen && (
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 onClick={() => setIsOpen(true)}
-                className="rounded-full w-16 h-16 shadow-lg bg-primary hover:bg-primary/90 transition-all duration-300 ease-in-out transform hover:scale-110"
+                className="rounded-full w-16 h-16 shadow-lg bg-white hover:bg-gray-100 transition-all duration-300 ease-in-out transform hover:scale-110"
               >
-                <MessageCircle className="w-10 h-10" />
+                <MessageCircle className="w-10 h-10 text-black" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -75,14 +85,16 @@ export default function ChatBot() {
           </Tooltip>
         )}
         {isOpen && (
-          <Card className="w-96 h-[600px] flex flex-col shadow-xl">
-            <CardHeader className="flex flex-row items-center bg-primary text-primary-foreground rounded-t-lg">
-              <Avatar className="h-12 w-12 border-2 border-primary-foreground">
+          <Card className="w-[450px] max-h-[100vh] flex flex-col shadow-xl absolute bottom-0 right-0 rounded-xl overflow-hidden h-[28rem]">
+            <CardHeader className="flex flex-row items-center bg-white text-gray-800 rounded-t-lg shadow-md z-10">
+              <Avatar className="h-12 w-12 border-2 border-gray-800">
                 <AvatarImage src="/placeholder-avatar.jpg" alt="Bot Avatar" />
-                <AvatarFallback>ACL</AvatarFallback>
+                <AvatarFallback>AI</AvatarFallback>
               </Avatar>
               <div className="ml-3 flex-grow">
-                <p className="text-xl font-bold">ACL Tear Detector</p>
+                <p className="text-xl font-bold">
+                  AI Health Assistant (Chatbot){" "}
+                </p>
                 <p className="text-sm">Always here to help</p>
               </div>
               <Tooltip>
@@ -90,7 +102,7 @@ export default function ChatBot() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-primary-foreground hover:bg-primary-foreground hover:text-primary rounded-full transition-colors duration-200"
+                    className="text-gray-600 hover:bg-gray-100 hover:text-gray-800 rounded-full transition-colors duration-200"
                     onClick={() => setIsOpen(false)}
                   >
                     <X className="h-6 w-6" />
@@ -101,7 +113,7 @@ export default function ChatBot() {
                 </TooltipContent>
               </Tooltip>
             </CardHeader>
-            <CardContent className="flex-grow overflow-auto p-4 space-y-4">
+            <CardContent className="flex-grow overflow-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-300 scrollbar-track-gray-100">
               {messages.map((message, index) => (
                 <div
                   key={index}
@@ -150,19 +162,20 @@ export default function ChatBot() {
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="flex items-center bg-muted p-3 rounded-lg">
-                    <span className="w-3 h-3 bg-primary rounded-full mr-1 animate-bounce"></span>
-                    <span
-                      className="w-3 h-3 bg-primary rounded-full mr-1 animate-bounce"
+                  <div className="flex items-center space-x-2 bg-muted p-3 rounded-lg">
+                    <div className="w-3 h-3 bg-primary rounded-full animate-bounce"></div>
+                    <div
+                      className="w-3 h-3 bg-primary rounded-full animate-bounce"
                       style={{ animationDelay: "0.2s" }}
-                    ></span>
-                    <span
+                    ></div>
+                    <div
                       className="w-3 h-3 bg-primary rounded-full animate-bounce"
                       style={{ animationDelay: "0.4s" }}
-                    ></span>
+                    ></div>
                   </div>
                 </div>
               )}
+              <div ref={messagesEndRef} />
             </CardContent>
             <CardFooter className="border-t">
               <form
@@ -200,7 +213,7 @@ export default function ChatBot() {
                       type="submit"
                       size="icon"
                       disabled={isLoading}
-                      className="bg-primary text-primary-foreground hover:bg-primary/90"
+                      className="bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
                     >
                       <Send className="h-5 w-5" />
                     </Button>
@@ -217,7 +230,7 @@ export default function ChatBot() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-muted-foreground hover:text-primary"
+                    className="text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors duration-200"
                   >
                     <ThumbsUp className="h-4 w-4 mr-1" />
                     Helpful
@@ -232,7 +245,7 @@ export default function ChatBot() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-muted-foreground hover:text-primary"
+                    className="text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors duration-200"
                   >
                     <ThumbsDown className="h-4 w-4 mr-1" />
                     Not Helpful
@@ -247,7 +260,7 @@ export default function ChatBot() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-muted-foreground hover:text-primary"
+                    className="text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors duration-200"
                   >
                     <HelpCircle className="h-4 w-4 mr-1" />
                     Help
