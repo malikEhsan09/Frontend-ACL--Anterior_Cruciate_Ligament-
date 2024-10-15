@@ -15,6 +15,7 @@ import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import logo from "@/public/assets/logo.svg"; // Assuming you have this
+import { RiSecurePaymentFill } from "react-icons/ri";
 
 interface SidebarProps {
   onToggle: (collapsed: boolean) => void;
@@ -142,6 +143,14 @@ const Sidebar = ({ onToggle, isCollapsed }: SidebarProps) => {
             isCollapsed={isCollapsed}
             onClick={() => handleNavigation("/player/feedbacks")}
             isActive={pathname === "/player/feedbacks"}
+          />
+          <SidebarItem
+            icon={<RiSecurePaymentFill size={isCollapsed ? 20 : 18} />}
+            name="Payments"
+            path="/player/payment"
+            isCollapsed={isCollapsed}
+            onClick={() => handleNavigation("/player/payment")}
+            isActive={pathname === "/player/payment"}
           />
         </div>
 
