@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  MessageCircle,
   Send,
   X,
   UserCircle2,
@@ -28,6 +27,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { BsRobot } from "react-icons/bs";
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -74,13 +74,13 @@ export default function ChatBot() {
             <TooltipTrigger asChild>
               <Button
                 onClick={() => setIsOpen(true)}
-                className="rounded-full w-16 h-16 shadow-lg bg-white hover:bg-gray-100 transition-all duration-300 ease-in-out transform hover:scale-110"
+                className="rounded-full w-16 h-16 shadow-lg bg-darkBlue hover:bg-onHover transition-all duration-300 ease-in-out transform hover:scale-110"
               >
-                <MessageCircle className="w-10 h-10 text-black" />
+                <BsRobot className="w-10 h-10 text-white" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>
-              <p>Open Chatbot</p>
+            <TooltipContent className="text-white bg-darkBlue font-semibold text-md">
+              <p>ChatBot</p>
             </TooltipContent>
           </Tooltip>
         )}
