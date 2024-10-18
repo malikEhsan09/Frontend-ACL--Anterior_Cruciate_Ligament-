@@ -61,7 +61,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar.tsx";
-import Topbar from "./components/Topbar";
+import Topbar from "./components/Topbar.tsx";
 import ChatBot from "./components/ChatBot";
 import { Inter } from "next/font/google";
 import { usePathname } from "next/navigation";
@@ -142,6 +142,10 @@ export default function PlayerLayout({ children }) {
         return "Help";
       case "/player/feedbacks":
         return "Feedbacks";
+      case "/player/settings":
+        return "Settings";
+      case "/player/payment":
+        return "Payments";
       default:
         return "Dashboard";
     }

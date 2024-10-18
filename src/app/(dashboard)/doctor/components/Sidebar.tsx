@@ -1,11 +1,6 @@
 "use client";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Wrench,
-  AlertCircle,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Wrench, AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -191,7 +186,6 @@ const Sidebar = ({
                 </TooltipContent>
               )}
             </Tooltip>
-
           </div>
         </div>
 
