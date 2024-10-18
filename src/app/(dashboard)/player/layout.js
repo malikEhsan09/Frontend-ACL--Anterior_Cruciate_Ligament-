@@ -60,9 +60,9 @@
 
 "use client";
 import React, { useState, useEffect } from "react";
-import Sidebar from "./components/Sidebar.tsx";
-import Topbar from "./components/Topbar.tsx";
-import ChatBot from "./components/ChatBot";
+import Sidebar from "./components/Sidebar.jsx";
+import Topbar from "./components/Topbar.jsx";
+import ChatBot from "./components/ChatBot.jsx";
 import { Inter } from "next/font/google";
 import { usePathname } from "next/navigation";
 import "../../globals.css";
