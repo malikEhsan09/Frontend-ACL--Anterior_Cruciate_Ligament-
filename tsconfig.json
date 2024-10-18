@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(dashboard)/player/components/ContentWrapper.js", "src/app/(dashboard)/admin/components/Sidebar.tsx", "src/app/(dashboard)/admin/layout.js", "src/app/(dashboard)/player/layout.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(dashboard)/player/components/ContentWrapper.js", "src/app/(dashboard)/admin/components/Sidebar.tsx", "src/app/(dashboard)/admin/layout.js", "src/app/(dashboard)/player/layout.tsx"],
   "exclude": ["node_modules"]
 }
