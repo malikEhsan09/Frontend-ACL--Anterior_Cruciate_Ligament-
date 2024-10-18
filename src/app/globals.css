@@ -37,17 +37,17 @@ body.dark-mode {
 }
 
 
-/* Animation for the scrollign effect */
-/* .fadeInLeft {
-  transform: translateX(-50%);
-  opacity: 1 !important;
+/* Add this in your global CSS file */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
-.fadeInRight {
-  transform: translateX(50%);
-  opacity: 1 !important;
+.animate-scroll {
+  display: flex;
+  animation: scroll 20s linear infinite;
 }
-
-.opacity-0 {
-  opacity: 0;
-} */

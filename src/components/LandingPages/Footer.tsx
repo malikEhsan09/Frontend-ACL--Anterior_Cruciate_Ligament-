@@ -3,6 +3,7 @@ import { Github, Linkedin, Instagram } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/public/assets/logo.svg";
+// import { FloatingDockDemo } from "./FloatingDockDemo";
 
 export default function Footer() {
   return (
@@ -71,14 +72,17 @@ export default function Footer() {
             <div className="text-black font-medium">Support</div>
             <div className="text-gray-500">Help Centre</div>
             <div className="text-gray-500">Contact us</div>
-            <div className="text-gray-500 underline">Backfeed@yahoo.com</div>
+            <div className="text-gray-500 underline">
+              ACL_Tear-Detector@gmail.com
+            </div>
           </div>
         </div>
       </div>
 
       <div className="w-full h-px bg-gray-300 opacity-30 my-6"></div>
       <div className="text-gray-500 text-sm text-center">
-        Copyright © 2024 Backfeed AI. All rights reserved
+        {/* <FloatingDockDemo /> */}
+        Copyright © 2024 ACL Tear Detector. All rights reserved
       </div>
     </div>
   );

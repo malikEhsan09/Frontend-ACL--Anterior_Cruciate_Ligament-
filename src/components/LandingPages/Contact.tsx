@@ -10,7 +10,7 @@ import {
   Linkedin,
 } from "lucide-react";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import logo from "@/public/assets/logo.svg";
 
 export default function ContactUs() {
@@ -26,12 +26,16 @@ export default function ContactUs() {
   const [responseMessage, setResponseMessage] = useState("");
 
   // Handle form input change
-  const handleChange = (e) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   // Handle form submission
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setResponseMessage("");
@@ -46,6 +50,7 @@ export default function ContactUs() {
       });
 
       const data = await response.json();
+      console.log(data);
 
       if (response.ok) {
         setResponseMessage("Your message has been sent successfully!");
@@ -73,10 +78,10 @@ export default function ContactUs() {
 
   return (
     <div
-      className="flex flex-col md:flex-row w-full h-full bg-white"
+      className="flex flex-col md:flex-row w-full h-full bg-white rounded-bl-[23rem]"
       id="contact"
     >
-      <div className="bg-[#1D3A7C] flex-1 p-10 rounded-bl-[100px] rounded-tr-[50px] flex items-center justify-center text-white shadow-lg">
+      <div className="bg-[#1F3F72] flex-1 p-10 rounded-bl-[100px] rounded-tr-[50px] flex items-center justify-center text-white shadow-lg">
         <div className="w-full max-w-lg">
           <h2 className="text-4xl font-bold mb-8 text-left">Reach Out to Us</h2>
           <p className="mb-8 text-left text-gray-300">

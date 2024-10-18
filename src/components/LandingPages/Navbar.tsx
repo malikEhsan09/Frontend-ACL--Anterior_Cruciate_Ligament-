@@ -64,38 +64,20 @@ export default function Navbar() {
 
           {/* Nav Buttons for Desktop */}
           <nav className="hidden md:flex space-x-4">
-            <button
-              className={`px-3 py-2 rounded-md text-md font-medium hover:font-bold ${
-                isDarkMode ? "text-white" : "text-semiTextColor"
-              } transition-all duration-300 ease-in`}
-              onClick={() => scrollToSection("hero")}
-            >
-              Home
-            </button>
-            <button
-              className={`px-3 py-2 rounded-md text-md font-medium hover:font-bold ${
-                isDarkMode ? "text-white" : "text-semiTextColor"
-              } transition-all duration-300 ease-in`}
-              onClick={() => scrollToSection("services")}
-            >
-              Services
-            </button>
-            <button
-              className={`px-3 py-2 rounded-md text-md font-medium hover:font-bold ${
-                isDarkMode ? "text-white" : "text-semiTextColor"
-              } transition-all duration-300 ease-in`}
-              onClick={() => scrollToSection("team")}
-            >
-              Our Team
-            </button>
-            <button
-              className={`px-3 py-2 rounded-md text-md font-medium hover:font-bold ${
-                isDarkMode ? "text-white" : "text-semiTextColor"
-              } transition-all duration-300 ease-in`}
-              onClick={() => scrollToSection("contact")}
-            >
-              Contact Us
-            </button>
+            {["hero", "services", "team", "contact"].map((section, index) => (
+              <button
+                key={index}
+                className={`relative px-3 py-2 rounded-md text-md font-medium ${
+                  isDarkMode ? "text-white" : "text-semiTextColor"
+                } transition-all duration-300 ease-in
+                after:content-[''] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:bg-buttonColor after:transition-all after:duration-500 after:ease-in-out hover:after:w-full hover:after:h-[3px] hover:after:bg-buttonColor after:w-0`}
+                onClick={() => scrollToSection(section)}
+              >
+                {section === "hero"
+                  ? "Home"
+                  : section.charAt(0).toUpperCase() + section.slice(1)}
+              </button>
+            ))}
           </nav>
 
           {/* Right Side - Buttons */}
