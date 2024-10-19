@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ThemeContext } from "@/app/context/ThemeContext";
 import landingPage from "@/public/assets/landingPage.svg";
 import forDarkLandingPage from "@/public/assets/kneeImageForDarkBg.svg";
+import HoverBorderGradientDemo from "./ButtonHover";
 
 export default function HeroSection() {
   const { isDarkMode } = useContext(ThemeContext); // Use dark mode context
@@ -34,9 +35,10 @@ export default function HeroSection() {
             Start Your Journey to Knee Recovery with Expert ACL Care. Discover
             Your Path to Healing Today!
           </p>
-          <Button className="bg-buttonColor text-white hover:bg-darkBlue pr-6 md:pr-10 py-2 md:py-3">
+          {/* <Button className="bg-buttonColor text-white hover:bg-darkBlue pr-6 md:pr-10 py-2 md:py-3">
             Lets Get Started →
-          </Button>
+          </Button> */}
+          <HoverBorderGradientDemo button="  Lets Get Started →" />
         </div>
         <div className="mt-8 md:mt-0 -mr-0 md:-mr-16">
           {" "}
