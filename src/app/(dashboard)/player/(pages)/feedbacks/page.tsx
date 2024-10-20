@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
@@ -18,7 +19,14 @@ export default function Reviews() {
   const [currentIndex, setCurrentIndex] = useState(0); // Start from the first valid review
   const [showModal, setShowModal] = useState(false);
   const [rating, setRating] = useState(0);
-  const [reviews, setReviews] = useState<any[]>([]);
+  interface Review {
+    username: string;
+    title: string;
+    description: string;
+    rating: number;
+  }
+
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   const fetchFeedbacks = async () => {
     try {
@@ -46,7 +54,7 @@ export default function Reviews() {
 
       // Filter valid reviews to ensure there are no empty or invalid ones
       const validReviews = feedbackData.filter(
-        (review: any) => review.username && review.description
+        (review: Review) => review.username && review.description
       );
 
       if (validReviews.length > 0) {
@@ -111,7 +119,7 @@ export default function Reviews() {
           setShowModal(false);
         }, 3000);
       } else {
-        const errorResponse = await response.json();
+        await response.json();
         toast.error("Failed to submit feedback.");
       }
     } catch (error) {
@@ -180,10 +188,12 @@ export default function Reviews() {
                 }}
               >
                 <div className="flex items-center mb-4">
-                  <img
+                  <Image
                     src="https://i.pravatar.cc/100"
                     alt={`${reviews[index].username}'s avatar`}
                     className="w-14 h-14 rounded-full"
+                    width={56}
+                    height={56}
                   />
 
                   <div className="ml-4">
