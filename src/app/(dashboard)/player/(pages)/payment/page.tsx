@@ -154,11 +154,44 @@ export default function PaymentHistory() {
                   {payment._id}
                 </TableCell>
                 <TableCell>{payment.amount}</TableCell>
+
                 <TableCell>
+                  {(() => {
+                    const status = payment.paymentStatus || "pending";
+                    let statusClass = "";
+                    let statusColor = "";
+                    let displayStatus = status; // New variable for simplified status
+
+                    if (status === "succeeded") {
+                      statusClass = "bg-green-200 text-green-800";
+                      statusColor = "border-green-500";
+                      displayStatus = "Succeeded";
+                    } else if (status === "failed") {
+                      statusClass = "bg-red-100 text-red-800";
+                      statusColor = "border-red-500";
+                      displayStatus = "Failed";
+                    } else if (status === "pending") {
+                      statusClass = "bg-yellow-100 text-yellow-800";
+                      statusColor = "border-yellow-500";
+                      displayStatus = "Pending"; // Simplified text
+                    } else {
+                      statusClass = "bg-gray-100 text-gray-800";
+                    }
+
+                    return (
+                      <span
+                        className={`${statusClass} ${statusColor} px-2 py-1 rounded-md text-sm font-medium border whitespace-nowrap`}
+                      >
+                        {displayStatus}
+                      </span>
+                    );
+                  })()}
+                </TableCell>
+                {/* <TableCell>
                   <span className="bg-red-100 text-red-800 px-2 py-1 rounded-md text-sm font-medium border border-red-200">
                     {payment.paymentStatus}
                   </span>
-                </TableCell>
+                </TableCell> */}
                 <TableCell>
                   {new Date(payment.createdAt).toLocaleDateString()}
                 </TableCell>
