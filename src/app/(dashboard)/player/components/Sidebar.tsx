@@ -22,6 +22,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { VscFeedback } from "react-icons/vsc";
 interface SidebarProps {
   isCollapsed?: boolean;
   onToggle: (collapsed: boolean) => void;
@@ -104,6 +105,11 @@ const Sidebar = ({
       name: "Get Help",
       icon: <HelpCircle size={24} />,
       path: "/player/help",
+    },
+    {
+      name: "Feedback",
+      icon: <VscFeedback size={24} />,
+      path: "/player/feedbacks",
     },
     {
       name: "Payments",
