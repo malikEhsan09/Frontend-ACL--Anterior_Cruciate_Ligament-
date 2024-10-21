@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import { VscFeedback } from "react-icons/vsc";
+import { FaCalendarAlt } from "react-icons/fa";
 interface SidebarProps {
   isCollapsed?: boolean;
   onToggle: (collapsed: boolean) => void;
@@ -115,6 +116,11 @@ const Sidebar = ({
       name: "Payments",
       icon: <RiSecurePaymentFill size={24} />,
       path: "/player/payment",
+    },
+    {
+      name: "Book Appointment",
+      icon: <FaCalendarAlt size={24} />,
+      path: "/player/bookAppointment",
     },
   ];
 

@@ -92,6 +92,8 @@ export default function PlayerLayout({ children }: PlayerLayoutProps) {
         return "Settings";
       case "/player/payment":
         return "Payments";
+      case "/player/bookAppointment":
+        return "Book Appointment";
       default:
         return "Dashboard";
     }
