@@ -429,7 +429,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import "./style.css";
 
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
 ); // Load Stripe with publishable key
 
 const UploadMriFile = () => {
@@ -442,7 +442,8 @@ const UploadMriFile = () => {
     };
   }
 
-  const [assessmentResults, setAssessmentResults] = useState<AssessmentResult | null>(null);
+  const [assessmentResults, setAssessmentResults] =
+    useState<AssessmentResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [paymentStatus, setPaymentStatus] = useState(""); // Track payment status
   const [isPaid, setIsPaid] = useState(false); // New: Track payment status for report download
@@ -549,12 +550,8 @@ const UploadMriFile = () => {
       const { sessionId } = response.data;
 
       // Redirect to Stripe Checkout
-      if (stripe) {
-        const { error } = await stripe.redirectToCheckout({ sessionId });
-        if (error) console.error("Stripe checkout error", error);
-      } else {
-        console.error("Stripe has not been initialized.");
-      }
+      const { error } = await stripe.redirectToCheckout({ sessionId });
+      if (error) console.error("Stripe checkout error", error);
     } catch (error) {
       setPaymentStatus("failed");
       console.error("Error during checkout:", error);
@@ -593,7 +590,7 @@ const UploadMriFile = () => {
         <p className="ml- text-gray-600 font-bold">Back</p>
       </div>
 
-      <div className="w-full max-w-4xl mx-auto min-h-80 border border-dashed bg-onHover border-gray-600 rounded-lg">
+      <div className="w-full max-w-4xl mx-auto min-h-80  border-gray-600 rounded-lg">
         <FileUpload onChange={handleFileUpload} />
       </div>
 
