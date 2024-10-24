@@ -37,6 +37,7 @@ export default function ChatBot() {
   const [input, setInput] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -46,23 +47,84 @@ export default function ChatBot() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = () => {
+  // Function to handle sending a message to the chatbot
+  const handleSend = async () => {
     if (input.trim()) {
       setMessages([...messages, { sender: "user", content: input }]);
       setInput("");
       setIsLoading(true);
 
-      // Simulate bot response after 2 seconds
-      setTimeout(() => {
+      try {
+        // Make a request to the FastAPI server for querying
+        const response = await fetch("http://127.0.0.1:8000/query/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({
+            question: input,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: "bot", content: data.answer },
+          ]);
+        } else {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: "bot", content: "Sorry, something went wrong." },
+          ]);
+        }
+      } catch (error) {
+        console.error("Error querying the FastAPI server:", error);
         setMessages((prevMessages) => [
           ...prevMessages,
-          {
-            sender: "bot",
-            content: "I'm here to assist you. What specific help do you need?",
-          },
+          { sender: "bot", content: "Error querying the server." },
         ]);
+      } finally {
         setIsLoading(false);
-      }, 2000);
+      }
+    }
+  };
+
+  // Function to handle PDF upload
+  const handleFileUpload = async () => {
+    if (selectedFile) {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      try {
+        // Make a request to the FastAPI server for uploading
+        const response = await fetch("http://127.0.0.1:8000/upload/", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: "bot", content: data.message },
+          ]);
+        } else {
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: "bot", content: "Failed to upload the file." },
+          ]);
+        }
+      } catch (error) {
+        console.error("Error uploading the file to the FastAPI server:", error);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { sender: "bot", content: "Error uploading the file." },
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -93,7 +155,7 @@ export default function ChatBot() {
               </Avatar>
               <div className="ml-3 flex-grow">
                 <p className="text-xl font-bold">
-                  AI Health Assistant (Chatbot){" "}
+                  AI Health Assistant (Chatbot)
                 </p>
                 <p className="text-sm">Always here to help</p>
               </div>
@@ -192,6 +254,8 @@ export default function ChatBot() {
                       size="icon"
                       variant="ghost"
                       className="text-muted-foreground hover:text-primary"
+                      onClick={handleFileUpload}
+                      disabled={!selectedFile || isLoading}
                     >
                       <Paperclip className="h-5 w-5" />
                     </Button>
@@ -200,6 +264,13 @@ export default function ChatBot() {
                     <p>Attach a file</p>
                   </TooltipContent>
                 </Tooltip>
+                <Input
+                  type="file"
+                  onChange={(e) =>
+                    setSelectedFile(e.target.files ? e.target.files[0] : null)
+                  }
+                  className="hidden"
+                />
                 <Input
                   type="text"
                   placeholder="Type your message..."
@@ -224,53 +295,6 @@ export default function ChatBot() {
                 </Tooltip>
               </form>
             </CardFooter>
-            <div className="flex justify-between items-center p-2 bg-muted rounded-b-lg">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors duration-200"
-                  >
-                    <ThumbsUp className="h-4 w-4 mr-1" />
-                    Helpful
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Rate this conversation as helpful</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors duration-200"
-                  >
-                    <ThumbsDown className="h-4 w-4 mr-1" />
-                    Not Helpful
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Rate this conversation as not helpful</p>
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors duration-200"
-                  >
-                    <HelpCircle className="h-4 w-4 mr-1" />
-                    Help
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Get help using the chatbot</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
           </Card>
         )}
       </div>
