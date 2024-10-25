@@ -36,7 +36,7 @@ export default function Banner() {
       </div>
 
       {/* Optional Background Pattern or Wave */}
-      <div className="absolute bottom-0 left-0 w-full h-32 bg-[url('/mnt/data/image.png')] bg-no-repeat bg-bottom"></div>
+      {/* <div className="absolute bottom-0 left-0 w-full h-32 bg-[url('/mnt/data/image.png')] bg-no-repeat bg-bottom"></div> */}
     </section>
   );
 }
