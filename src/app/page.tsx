@@ -5,6 +5,7 @@ import Services from "@/components/LandingPages/Services";
 import Team from "@/components/LandingPages/Team";
 import Footer from "@/components/LandingPages/Footer";
 import Contact from "@/components/LandingPages/Contact";
+import Features from "@/components/LandingPages/Features";
 export default function Home() {
   return (
     <>
@@ -13,6 +14,7 @@ export default function Home() {
         <HeroSection />
         <Banner />
         <Services />
+        <Features />
         <Team />
         <Contact />
         <Footer />

@@ -1,9 +1,11 @@
-import React from "react";
+import React from 'react'
 
 const Features = () => {
   return (
-    <div> Here comes the modules and features from teh acertinity library</div>
-  );
-};
+    <div>
+      Here comes features 
+    </div>
+  )
+}
 
-export default Features;
+export default Features
