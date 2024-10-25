@@ -323,7 +323,6 @@ import {
   RefreshCw,
   Send,
   MessageSquare,
-  X,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
