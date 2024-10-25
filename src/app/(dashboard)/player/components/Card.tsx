@@ -13,14 +13,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
 // Reusable Card Component
-const StatCard = ({
+interface StatCardProps {
+  title: string;
+  description: string;
+  chartData: { name: string; value: number }[];
+  totalLabel: string;
+  percentage: number;
+}
+
+const StatCard: React.FC<StatCardProps> = ({
   title,
   description,
   chartData,
@@ -38,7 +45,14 @@ const StatCard = ({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer className="mx-auto aspect-square max-h-[250px]">
+        <ChartContainer
+          className="mx-auto aspect-square max-h-[250px]"
+          config={
+            {
+              /* your config here */
+            }
+          }
+        >
           <PieChart>
             <ChartTooltip
               cursor={false}
@@ -96,3 +110,5 @@ const StatCard = ({
     </Card>
   );
 };
+
+export default StatCard;
