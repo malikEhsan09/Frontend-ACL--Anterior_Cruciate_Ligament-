@@ -127,7 +127,7 @@ const content = [
 
 export function ModuleContent() {
   return (
-    <div className="p-10">
+    <div className="p-10" id="modules">
       <StickyScroll content={content} />
     </div>
   );

@@ -243,11 +243,12 @@ export default function Navbar() {
               </Link>
             </div>
             <div className="flex-1 flex justify-center">
-              <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-3">
                 {[
                   { name: "Services", id: "services" },
                   { name: "Contact Us", id: "contact" },
                   { name: "Teams", id: "team" },
+                  { name: "Modules", id: "modules" },
                 ].map((item) => (
                   <button
                     key={item.name}
@@ -263,7 +264,7 @@ export default function Navbar() {
                 ))}
               </div>
             </div>
-            <div className="hidden md:flex items-center space-x-6">
+            <div className="hidden md:flex items-center space-x-2">
               <Button
                 variant="ghost"
                 size="icon"
