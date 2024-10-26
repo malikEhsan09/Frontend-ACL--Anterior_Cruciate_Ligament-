@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-// import { FaEdit, FaSyncAlt, FaCodeBranch, FaClipboard } from "react-icons/fa";
 
 export const StickyScroll = ({
   content,
@@ -64,7 +63,7 @@ export const StickyScroll = ({
       animate={{
         backgroundColor: backgroundColor,
       }}
-      className="h-[30rem] overflow-y-auto flex justify-center relative space-x-10 rounded-md p-10"
+      className="h-[30rem] overflow-y-auto flex justify-center relative space-x-10 rounded-md p-10 scrollbar"
       ref={ref}
     >
       <div className="relative flex items-start px-4">
@@ -121,3 +120,27 @@ export const StickyScroll = ({
     </motion.div>
   );
 };
+
+// Scrollbar styles
+const scrollbarStyles = `
+  .scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 9999px; /* Fully rounded scrollbar */
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 9999px; /* Fully rounded track */
+  }
+`;
+
+// Adding the scrollbar styles to the document
+if (typeof window !== "undefined") {
+  const styleElement = document.createElement("style");
+  styleElement.innerHTML = scrollbarStyles;
+  document.head.appendChild(styleElement);
+}
