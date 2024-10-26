@@ -15,36 +15,40 @@ const chartData = [
 export default function TotalClubs() {
   const [totalClubs, setTotalClubs] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Function to get the authentication token from localStorage
   const getAuthToken = () => {
     return localStorage.getItem("authToken");
   };
 
-  // Fetch clubs data from the API
-  const fetchClubsData = async () => {
-    const authToken = getAuthToken();
-    const headers = new Headers();
-    headers.append("Authorization", `Bearer ${authToken}`);
-
-    try {
-      const response = await fetch("http://localhost:8800/api/club", {
-        headers: headers,
-      });
-      if (!response.ok) throw new Error("Failed to fetch clubs data");
-      const clubsData = await response.json();
-
-      // Set the total number of clubs
-      setTotalClubs(clubsData.length);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    // Fetch clubs data from the API
+    const fetchClubsData = async () => {
+      const authToken = getAuthToken();
+      const headers = new Headers();
+      headers.append("Authorization", `Bearer ${authToken}`);
+
+      try {
+        const response = await fetch("http://localhost:8800/api/club", {
+          headers: headers,
+        });
+        if (!response.ok) throw new Error("Failed to fetch clubs data");
+        const clubsData = await response.json();
+
+        // Set the total number of clubs
+        setTotalClubs(clubsData.length);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError(String(error));
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchClubsData();
   }, []);
 

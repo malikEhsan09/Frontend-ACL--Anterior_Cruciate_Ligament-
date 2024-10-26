@@ -2,7 +2,7 @@
 import TotalClubs from "./components/TotalClubs";
 import TotalPlayers from "./components/TotalPlayers";
 import TotalUsers from "./components/TotalUsers";
-import UserVisits from "./components/UsersVisit.jsx";
+import UserVisits from "./components/UsersVisit";
 import Graph from "./components/Graph.jsx";
 import RecentActivities from "./components/RecenetActivities.jsx";
 

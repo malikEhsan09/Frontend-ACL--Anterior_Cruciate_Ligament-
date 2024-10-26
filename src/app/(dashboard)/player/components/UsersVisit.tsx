@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { BarChart, Bar, ResponsiveContainer } from "recharts";
 
 // Mock data service to simulate API response
-const fetchMockUserVisits = () => {
+const fetchMockUserVisits = (): Promise<{ date: string; visits: number }[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const mockData = [
@@ -20,15 +20,15 @@ const fetchMockUserVisits = () => {
 };
 
 export default function UserVisits() {
-  const [userVisitsData, setUserVisitsData] = useState([]); // Data for BarChart
+  const [userVisitsData, setUserVisitsData] = useState<{ date: string; visits: number }[]>([]); // Data for BarChart
   const [totalVisits, setTotalVisits] = useState(0); // Total visits count
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Function to simulate fetching user visit data
   const fetchUserVisits = async () => {
     try {
-      const data = await fetchMockUserVisits();
+      const data: { date: string; visits: number }[] = await fetchMockUserVisits();
       setUserVisitsData(data);
       // Calculate total visits
       const total = data.reduce((sum, entry) => sum + entry.visits, 0);

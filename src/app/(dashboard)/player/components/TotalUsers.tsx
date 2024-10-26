@@ -6,7 +6,7 @@ export default function TotalUsers() {
   const [totalUsers, setTotalUsers] = useState(0);
   const [userSignups, setUserSignups] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Function to get the authentication token from localStorage
   const getAuthToken = () => {
@@ -14,36 +14,38 @@ export default function TotalUsers() {
   };
 
   // Fetch users data from the API
-  const fetchUsersData = async () => {
-    const authToken = getAuthToken();
-    const headers = new Headers();
-    headers.append("Authorization", `Bearer ${authToken}`);
-
-    try {
-      const response = await fetch("http://localhost:8800/api/auth/users", {
-        headers: headers,
-      });
-      if (!response.ok) throw new Error("Failed to fetch users data");
-      const usersData = await response.json();
-
-      // Set the total number of users
-      setTotalUsers(usersData.length);
-
-      // Create a zig-zag motion by alternating values
-      const processedData = usersData.map((user, index) => ({
-        index,
-        value: index % 2 === 0 ? 3 + index * 2 : 2 + index * 3, // Adjust this logic for more variation
-      }));
-
-      setUserSignups(processedData);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
+    const fetchUsersData = async () => {
+      const authToken = getAuthToken();
+      const headers = new Headers();
+      headers.append("Authorization", `Bearer ${authToken}`);
+
+      try {
+        const response = await fetch("http://localhost:8800/api/auth/users", {
+          headers: headers,
+        });
+        if (!response.ok) throw new Error("Failed to fetch users data");
+        const usersData = await response.json();
+
+        // Set the total number of users
+        setTotalUsers(usersData.length);
+
+        // Create a zig-zag motion by alternating values
+        const processedData = usersData.map(
+          (user: { id: string; name: string }, index: number) => ({
+            index,
+            value: index % 2 === 0 ? 3 + index * 2 : 2 + index * 3, // Adjust this logic for more variation
+          })
+        );
+
+        setUserSignups(processedData);
+      } catch (error) {
+        setError((error as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchUsersData();
   }, []);
 

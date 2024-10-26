@@ -15,7 +15,7 @@ const chartData = [
 export default function TotalPlayers() {
   const [totalPlayers, setTotalPlayers] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   // Function to get the authentication token from localStorage
   const getAuthToken = () => {
@@ -23,30 +23,34 @@ export default function TotalPlayers() {
   };
 
   // Fetch players data from the API
-  const fetchPlayersData = async () => {
-    const authToken = getAuthToken();
-    const headers = new Headers();
-    headers.append("Authorization", `Bearer ${authToken}`);
-
-    try {
-      const response = await fetch("http://localhost:8800/api/player", {
-        method: "GET",
-        headers: headers,
-      });
-
-      if (!response.ok) throw new Error("Failed to fetch players data");
-
-      const playersData = await response.json();
-      setTotalPlayers(playersData.length);
-    } catch (error) {
-      console.error("Error:", error.message);
-      setError(error.message); // Display error to the user
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchPlayersData = async () => {
+      const authToken = getAuthToken();
+      const headers = new Headers();
+      headers.append("Authorization", `Bearer ${authToken}`);
+
+      try {
+        const response = await fetch("http://localhost:8800/api/player", {
+          method: "GET",
+          headers: headers,
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch players data");
+
+        const playersData = await response.json();
+        setTotalPlayers(playersData.length);
+      } catch (error) {
+        console.error("Error:", (error as Error).message);
+        if (error instanceof Error) {
+          setError(error.message); // Display error to the user
+        } else {
+          setError("An unknown error occurred");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchPlayersData();
   }, []);
 
