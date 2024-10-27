@@ -1,6 +1,6 @@
 "use client";
-import Sidebar from "./components/Sidebar.tsx";
-import Topbar from "./components/Topbar.tsx";
+import Sidebar from "./components/Sidebar.jsx";
+import Topbar from "./components/Topbar.jsx";
 import { Inter } from "next/font/google";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation"; // Import usePathname
@@ -8,7 +8,9 @@ import "../../globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function PlayerLayout({ children }) {
+import { ReactNode } from "react";
+
+export default function PlayerLayout({ children }: { children: ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [profileImage, setProfileImage] = useState(
     "http://res.cloudinary.com/dr5p2iear/image/upload/v1720626597/di9grffkw7ltgikaiper.jpg"
@@ -87,11 +89,11 @@ export default function PlayerLayout({ children }) {
     }
   };
 
-  const handleSidebarToggle = (collapsed) => {
+  const handleSidebarToggle = (collapsed: boolean) => {
     setIsCollapsed(collapsed);
   };
 
-  const updateProfileImage = (newImageUrl) => {
+  const updateProfileImage = (newImageUrl: string) => {
     setProfileImage(newImageUrl); // Update profile image in layout state
     setImageUpdated(true); // Track that the image has been updated
   };
@@ -126,11 +128,16 @@ export default function PlayerLayout({ children }) {
               />
             </div>
             <main className="py-6 px-4">
-              {React.isValidElement(children)
-                ? React.cloneElement(children, {
+              {React.isValidElement(children) &&
+                React.cloneElement(
+                  children as React.ReactElement<{
+                    onUpdateProfileImage: (newImageUrl: string) => void;
+                  }>,
+                  {
                     onUpdateProfileImage: updateProfileImage, // Pass the updateProfileImage function to children
-                  })
-                : children}
+                  }
+                )}
+              {!React.isValidElement(children) && children}
             </main>
             {/* Adjusted margin */}
           </div>
