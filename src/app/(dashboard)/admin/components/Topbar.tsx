@@ -9,7 +9,7 @@ const Topbar = ({
   className = "",
   title = "Dashboard",
   isSidebarCollapsed,
-  userImage = "/default-profile.jpg", // Default image
+  userImage = "http://res.cloudinary.com/dr5p2iear/image/upload/v1720626597/di9grffkw7ltgikaiper.jpg", // Default image
 }) => {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
@@ -137,7 +137,7 @@ export default Topbar;
 //   className = "",
 //   title = "Dashboard",
 //   isSidebarCollapsed,
-//   userImage = "/default-profile.jpg", // Default image
+//   userImage = "http://res.cloudinary.com/dr5p2iear/image/upload/v1720626597/di9grffkw7ltgikaiper.jpg", // Default image
 //   userName = "Guest", // Default name
 // }) => {
 //   const [userEmail, setUserEmail] = useState("");

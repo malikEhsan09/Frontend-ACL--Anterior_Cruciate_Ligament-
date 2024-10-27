@@ -17,7 +17,9 @@ interface PlayerLayoutProps {
 
 export default function PlayerLayout({ children }: PlayerLayoutProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [profileImage, setProfileImage] = useState("/default-profile.jpg");
+  const [profileImage, setProfileImage] = useState(
+    "http://res.cloudinary.com/dr5p2iear/image/upload/v1720626597/di9grffkw7ltgikaiper.jpg"
+  );
   const [imageUpdated, setImageUpdated] = useState(false);
 
   const pathname = usePathname();
@@ -49,7 +51,10 @@ export default function PlayerLayout({ children }: PlayerLayoutProps) {
         console.log("Fetched Profile Data:", result);
 
         // Update the state with the fetched profile image and user name
-        setProfileImage(result.image || "/default-profile.jpg");
+        setProfileImage(
+          result.image ||
+            "http://res.cloudinary.com/dr5p2iear/image/upload/v1720626597/di9grffkw7ltgikaiper.jpg"
+        );
         // setUserName(result.firstName + " " + result.lastName);
       } else {
         console.error("Failed to fetch player data", response.status);

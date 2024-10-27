@@ -3,8 +3,8 @@ import TotalClubs from "./components/TotalClubs";
 import TotalPlayers from "./components/TotalPlayers";
 import TotalUsers from "./components/TotalUsers";
 import UserVisits from "./components/UsersVisit";
-import Graph from "./components/Graph.jsx";
-import RecentActivities from "./components/RecenetActivities.jsx";
+import Graph from "./components/Graph";
+import RecentActivities from "./components/RecenetActivities";
 
 export default function Player() {
   return (

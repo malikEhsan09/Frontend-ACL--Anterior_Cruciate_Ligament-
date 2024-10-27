@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   BarChart,
   Bar,
@@ -12,22 +12,27 @@ import {
 import { format } from "date-fns";
 
 // Custom legend with rounded dots
-const renderLegend = (props) => {
+import { LegendProps, DefaultLegendContent } from "recharts";
+
+const renderLegend = (props: LegendProps) => {
   const { payload } = props;
   return (
     <ul className="flex space-x-4 justify-center mb-4">
-      {payload.map((entry, index) => (
-        <li key={`item-${index}`} className="flex items-center space-x-2">
-          <div
-            className="h-4 w-4 rounded-full"
-            style={{ backgroundColor: entry.color }}
-          />
-          <span style={{ color: entry.color }}>{entry.value}</span>
-        </li>
-      ))}
+      {payload &&
+        payload.map((entry, index) => (
+          <li key={`item-${index}`} className="flex items-center space-x-2">
+            <div
+              className="h-4 w-4 rounded-full"
+              style={{ backgroundColor: entry.color }}
+            />
+            <span style={{ color: entry.color }}>{entry.value}</span>
+          </li>
+        ))}
     </ul>
   );
 };
+
+renderLegend.defaultProps = DefaultLegendContent.defaultProps;
 
 // Helper function to generate an array with all days of the week
 const generateWeekDays = () => {
@@ -42,28 +47,31 @@ const generateWeekDays = () => {
   ];
 };
 
-// Function to abbreviate week day names
-const abbreviateDay = (day) => {
-  const abbreviations = {
-    Monday: "Mon",
-    Tuesday: "Tue",
-    Wednesday: "Wed",
-    Thursday: "Thu",
-    Friday: "Fri",
-    Saturday: "Sat",
-    Sunday: "Sun",
-  };
-  return abbreviations[day] || day;
+// Abbreviations for week day names
+const abbreviations = {
+  Monday: "Mon",
+  Tuesday: "Tue",
+  Wednesday: "Wed",
+  Thursday: "Thu",
+  Friday: "Fri",
+  Saturday: "Sat",
+  Sunday: "Sun",
 };
 
 const ClubsOverview = () => {
-  const [data, setData] = useState([]);
+  // Function to abbreviate week day names
+  const abbreviateDay = (day: keyof typeof abbreviations) => {
+    return abbreviations[day] || day;
+  };
+  const [data, setData] = useState<
+    { name: string; activeClubs: number; inactiveClubs: number }[]
+  >([]);
   const [activeFilter, setActiveFilter] = useState("All");
   const [clubCount, setClubCount] = useState(0);
   const [playerCount, setPlayerCount] = useState(0);
   const [userCount, setUserCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Function to get the authentication token from localStorage
   const getAuthToken = () => {
@@ -71,7 +79,7 @@ const ClubsOverview = () => {
   };
 
   // Fetch clubs data
-  const fetchClubsData = async () => {
+  const fetchClubsData = useCallback(async () => {
     const authToken = getAuthToken();
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${authToken}`);
@@ -85,13 +93,16 @@ const ClubsOverview = () => {
 
       // Prepare a map to hold the number of active and inactive clubs for each day
       const weekDays = generateWeekDays();
-      const dayMap = weekDays.reduce((acc, day) => {
+      const dayMap: Record<
+        string,
+        { activeClubs: number; inactiveClubs: number }
+      > = weekDays.reduce((acc, day) => {
         acc[day] = { activeClubs: 0, inactiveClubs: 0 };
         return acc;
-      }, {});
+      }, {} as Record<string, { activeClubs: number; inactiveClubs: number }>);
 
       // Populate the map with the data from the fetched clubs
-      clubsData.forEach((club) => {
+      clubsData.forEach((club: { createdAt: string; isActive: boolean }) => {
         const clubCreatedDate = new Date(club.createdAt);
         const clubDay = format(clubCreatedDate, "EEEE"); // Get full day of the week (Monday, Tuesday, etc.)
         if (club.isActive) {
@@ -112,14 +123,18 @@ const ClubsOverview = () => {
       setClubCount(clubsData.length);
     } catch (error) {
       console.error(error);
-      setError(error.message);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError(String(error));
+      }
     } finally {
       setLoading(false);
     }
-  };
+  }, []); // Added closing parenthesis here for useCallback
 
   // Fetch players count
-  const fetchPlayersCount = async () => {
+  const fetchPlayersCount = useCallback(async () => {
     const authToken = getAuthToken();
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${authToken}`);
@@ -134,10 +149,10 @@ const ClubsOverview = () => {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, []);
 
   // Fetch all users count
-  const fetchUsersCount = async () => {
+  const fetchUsersCount = useCallback(async () => {
     const authToken = getAuthToken();
     const headers = new Headers();
     headers.append("Authorization", `Bearer ${authToken}`);
@@ -152,25 +167,34 @@ const ClubsOverview = () => {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, []);
 
   // Handle filter change
-  const handleFilterChange = (filter) => {
-    setActiveFilter(filter);
-    setLoading(true);
+  const handleFilterChange = useCallback(
+    (filter: string) => {
+      setActiveFilter(filter);
+      setLoading(true);
 
-    // Fetch data based on selected filter
-    fetchClubsData();
-    fetchPlayersCount();
-    fetchUsersCount();
-  };
+      // Fetch data based on selected filter
+      fetchClubsData();
+      fetchPlayersCount();
+      fetchUsersCount();
+    },
+    [fetchClubsData, fetchPlayersCount, fetchUsersCount]
+  ); // Added closing parenthesis here for useCallback
 
   useEffect(() => {
     handleFilterChange(activeFilter); // Fetch initial data on mount
-  }, []);
+  }, [activeFilter, handleFilterChange]);
 
   // Custom Tooltip Component
-  const CustomTooltip = ({ active, payload }) => {
+  const CustomTooltip = ({
+    active,
+    payload,
+  }: {
+    active?: boolean;
+    payload?: { value: number }[];
+  }) => {
     if (active && payload && payload.length) {
       return (
         <div
@@ -252,7 +276,8 @@ const ClubsOverview = () => {
               content={<CustomTooltip />}
               cursor={{ fill: "rgba(255,255,255,0.1)" }}
             />
-            <Legend content={renderLegend} /> {/* Custom Legend */}
+            <Legend content={(props) => renderLegend(props as LegendProps)} />{" "}
+            {/* Custom Legend */}
             {/* Bars for active and inactive clubs */}
             <Bar
               dataKey="activeClubs"

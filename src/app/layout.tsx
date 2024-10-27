@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@/app/context/ThemeContext.js"; // Import the ThemeProvider
+import { ThemeProvider } from "@/app/context/ThemeContext";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
