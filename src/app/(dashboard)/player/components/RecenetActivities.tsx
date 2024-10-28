@@ -1,12 +1,23 @@
 "use client";
+import Image from "next/image";
 import React, { useState, useEffect } from "react";
+
+// Removed unused 'Club' interface
 
 export default function RecentActivities() {
   // State to manage activities from the backend
-  const [activities, setActivities] = useState([]);
+  interface Activity {
+    id: string;
+    text: string;
+    date: string;
+    logo?: string;
+    type: string;
+  }
+
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [noMoreActivities, setNoMoreActivities] = useState(false);
 
@@ -15,39 +26,47 @@ export default function RecentActivities() {
     return localStorage.getItem("authToken");
   };
 
-  // Function to fetch club data from the API
-  const fetchClubActivities = async () => {
-    const authToken = getAuthToken();
-    const headers = new Headers();
-    headers.append("Authorization", `Bearer ${authToken}`);
-
-    try {
-      const response = await fetch("http://localhost:8800/api/club", {
-        headers: headers,
-      });
-      if (!response.ok) throw new Error("Failed to fetch club activities");
-      const clubData = await response.json();
-      console.log(clubData);
-
-      // Map data to fit the activity format for display
-      const clubActivities = clubData.map((club) => ({
-        id: club._id,
-        text: `${club?.clubName}`,
-        date: club.createdAt, // Assuming 'createdAt' exists in your club schema
-        logo: club?.clubLogo,
-        type: "club",
-      }));
-
-      setActivities(clubActivities);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Fetch club activities on component mount
   useEffect(() => {
+    // Function to fetch club data from the API
+    const fetchClubActivities = async () => {
+      const authToken = getAuthToken();
+      const headers = new Headers();
+      headers.append("Authorization", `Bearer ${authToken}`);
+
+      try {
+        const response: Response = await fetch(
+          "http://localhost:8800/api/club",
+          {}
+        );
+        if (!response.ok) throw new Error("Failed to fetch club activities");
+        const clubData = await response.json();
+        console.log(clubData);
+
+        // Map data to fit the activity format for display
+        const clubActivities = clubData.map(
+          (club: {
+            _id: string;
+            clubName: string;
+            createdAt: string;
+            clubLogo?: string;
+          }) => ({
+            id: club._id,
+            text: `${club?.clubName}`,
+            date: club.createdAt, // Assuming 'createdAt' exists in your club schema
+            logo: club?.clubLogo,
+            type: "club",
+          })
+        );
+
+        setActivities(clubActivities);
+      } catch (error) {
+        setError((error as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchClubActivities();
   }, []);
 
@@ -89,10 +108,12 @@ export default function RecentActivities() {
             <div className="flex items-center space-x-3">
               {/* Display club logo */}
               {activity.logo && (
-                <img
+                <Image
                   src={activity.logo}
                   alt={`${activity.text}`}
-                  className="w-8 h-8 rounded-full object-cover"
+                  width={32}
+                  height={32}
+                  className="rounded-full object-cover"
                 />
               )}
               <div className="flex flex-col">
