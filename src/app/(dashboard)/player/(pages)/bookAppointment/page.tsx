@@ -46,7 +46,7 @@ export default function BookAppointment() {
     "December",
   ];
 
-  // Mock doctors data
+  // Mock & static data for the doctor we can change this
   const doctors: Doctor[] = [
     {
       id: 1,
