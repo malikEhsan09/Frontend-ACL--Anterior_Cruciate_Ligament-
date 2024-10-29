@@ -1,7 +1,19 @@
 import React from "react";
 import { Clock } from "lucide-react"; // Import Clock icon from lucide-react
 
-const ExerciseCard = ({ title, duration, progressStatus, category }) => {
+interface ExerciseCardProps {
+  title: string;
+  duration: number;
+  progressStatus: string;
+  category: string;
+}
+
+const ExerciseCard: React.FC<ExerciseCardProps> = ({
+  title,
+  duration,
+  progressStatus,
+  category,
+}) => {
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg cursor-pointer transition-shadow duration-200">
       <div className="p-4">
