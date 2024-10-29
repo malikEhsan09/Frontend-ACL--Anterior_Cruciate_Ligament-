@@ -1,7 +1,7 @@
 "use client";
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
-import { Settings, LogOut, User } from "lucide-react"; // Import icons
+import { Settings, LogOut, User } from "lucide-react"; 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
