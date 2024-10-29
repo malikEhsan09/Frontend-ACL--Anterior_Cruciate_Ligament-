@@ -2,7 +2,19 @@
 import { useState } from "react";
 import { ChevronDown, MoreHorizontal } from "lucide-react";
 
-const AccordionItem = ({ notification, onMarkAsRead, onRemove }) => {
+interface Notification {
+  id: string;
+  message: string;
+  time: string;
+}
+
+interface AccordionItemProps {
+  notification: Notification;
+  onMarkAsRead: (id: string) => void;
+  onRemove: (id: string) => void;
+}
+
+const AccordionItem: React.FC<AccordionItemProps> = ({ notification, onMarkAsRead, onRemove }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -10,7 +22,7 @@ const AccordionItem = ({ notification, onMarkAsRead, onRemove }) => {
     setIsOpen((prev) => !prev);
   };
 
-  const handleMenuToggle = (e) => {
+  const handleMenuToggle = (e: React.MouseEvent<SVGSVGElement>) => {
     e.stopPropagation();
     setIsMenuOpen((prev) => !prev);
   };

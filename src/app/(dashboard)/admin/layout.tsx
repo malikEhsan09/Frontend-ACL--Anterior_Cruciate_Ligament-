@@ -8,7 +8,9 @@ import "../../globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function PlayerLayout({ children }) {
+import { ReactNode } from "react";
+
+export default function PlayerLayout({ children }: { children: ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
 
@@ -39,7 +41,7 @@ export default function PlayerLayout({ children }) {
     }
   };
 
-  const handleSidebarToggle = (collapsed) => {
+  const handleSidebarToggle = (collapsed: boolean) => {
     setIsCollapsed(collapsed);
   };
 

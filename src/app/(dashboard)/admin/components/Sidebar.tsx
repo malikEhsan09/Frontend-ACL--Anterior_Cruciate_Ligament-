@@ -18,11 +18,15 @@ import {
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import logo from "@/public/assets/logo.svg"; // Closed sidebar logo
-import sidebarOpenLogo from "@/public/assets/sidebarLogoOpen.svg"; // Open sidebar logo
+import logo from "@/public/assets/logo.svg"; 
 import "./sidebar.css";
 
-const Sidebar = ({ isCollapsed: initialCollapsed = false, onToggle }) => {
+interface SidebarProps {
+  isCollapsed?: boolean;
+  onToggle: (collapsed: boolean) => void;
+}
+
+const Sidebar = ({ isCollapsed: initialCollapsed = false, onToggle }: SidebarProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(initialCollapsed);
@@ -31,11 +35,11 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false, onToggle }) => {
   const toggleSidebar = () => {
     const newCollapsed = !isCollapsed;
     setIsCollapsed(newCollapsed); // Toggle the collapse state
-    onToggle(newCollapsed); // Inform parent layout of sidebar collapse state
+    onToggle(newCollapsed); 
   };
 
-  const handleNavigation = (path) => {
-    router.push(path); // Navigate to the chosen path
+  const handleNavigation = (path: string) => {
+    router.push(path); 
   };
 
   const handleLogout = async () => {
@@ -117,7 +121,7 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false, onToggle }) => {
               key={item.name}
               icon={item.icon}
               name={item.name}
-              path={item.path}
+              // path={item.path}
               isCollapsed={isCollapsed}
               onClick={() => handleNavigation(item.path)}
               isActive={pathname === item.path} // Check if the current path matches the menu item path
@@ -130,7 +134,6 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false, onToggle }) => {
           <SidebarItem
             icon={<LogOut />}
             name="Logout"
-            path="/logout"
             isCollapsed={isCollapsed}
             onClick={handleLogout}
             isActive={pathname === "/logout"}
@@ -153,7 +156,16 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false, onToggle }) => {
   );
 };
 
-const SidebarItem = ({ icon, name, isCollapsed, onClick, isActive }) => {
+interface SidebarItemProps {
+  icon: JSX.Element;
+  name: string;
+  // path: string;
+  isCollapsed: boolean;
+  onClick: () => void;
+  isActive: boolean;
+}
+
+const SidebarItem = ({ icon, name, isCollapsed, onClick, isActive }: SidebarItemProps) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
