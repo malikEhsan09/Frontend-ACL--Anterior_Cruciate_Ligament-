@@ -20,8 +20,6 @@ cd Frontend-ACL--Anterior_Cruciate_Ligament-
 npm install
 # or
 yarn install
-# or
-pnpm install
 ```
 
 ### Running the Development Server
@@ -32,10 +30,6 @@ To run the development server, use:
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to view the application.
