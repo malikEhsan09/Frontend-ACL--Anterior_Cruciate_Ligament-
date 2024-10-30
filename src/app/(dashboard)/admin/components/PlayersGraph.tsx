@@ -132,7 +132,13 @@ import { FaArrowUp } from "react-icons/fa"; // Importing the up arrow icon
 const threshold = 7; // Define your threshold value here
 
 // Custom Tooltip Component
-const CustomTooltip = ({ active, payload, label }) => {
+import { TooltipProps } from "recharts";
+
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+}: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     return (
       <div
@@ -154,27 +160,10 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-// Helper to get the abbreviated month name
-const getAbbreviatedMonthName = (date) => {
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  return months[date.getMonth()];
-};
+// Removed unused getAbbreviatedMonthName function
 
 const PlayersGraph = () => {
-  const [data, setData] = useState([]); // State for player registration data
+  const [data, setData] = useState<MonthData[]>([]); // State for player registration data
   const [totalPlayers, setTotalPlayers] = useState(0); // State for total players count
   const [percentageChange, setPercentageChange] = useState(0); // State for percentage change
   const [percentageColor, setPercentageColor] = useState("green"); // Color for percentage change
@@ -186,87 +175,102 @@ const PlayersGraph = () => {
   };
 
   // Group players by month using JavaScript Date methods
-  const groupPlayersByMonth = (players) => {
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
+  interface Player {
+    createdAt: string;
+  }
 
-    const playersByMonth = months.map((month) => ({ name: month, value: 0 }));
-
-    players.forEach((player) => {
-      const playerDate = new Date(player.createdAt);
-      const monthIndex = playerDate.getMonth(); // Get the month index (0-11)
-      playersByMonth[monthIndex].value += 1; // Increment the count for the respective month
-    });
-
-    return playersByMonth;
-  };
+  interface MonthData {
+    name: string;
+    value: number;
+  }
 
   // Function to fetch player data from the API
-  const fetchPlayerData = async () => {
-    const authToken = getAuthToken();
-    const headers = new Headers();
-    headers.append("Authorization", `Bearer ${authToken}`);
-
-    try {
-      const response = await fetch("http://localhost:8800/api/player", {
-        headers: headers,
-      });
-      if (!response.ok) throw new Error("Failed to fetch players data");
-
-      const playersData = await response.json();
-
-      // Group players by month using createdAt field
-      const groupedData = groupPlayersByMonth(playersData);
-      setData(groupedData);
-
-      // Calculate total players
-      const total = playersData.length;
-      setTotalPlayers(total);
-
-      // Calculate percentage change based on the last two months
-      const currentMonthPlayers =
-        groupedData[new Date().getMonth()]?.value || 0;
-      const previousMonthPlayers =
-        groupedData[new Date().getMonth() - 1]?.value || 0;
-
-      let percentage = 0;
-      if (previousMonthPlayers) {
-        percentage =
-          ((currentMonthPlayers - previousMonthPlayers) /
-            previousMonthPlayers) *
-          100;
-      }
-
-      setPercentageChange(percentage.toFixed(2)); // Round to 2 decimal places
-
-      // Adjust percentage color based on growth or no growth
-      if (currentMonthPlayers === 0 && previousMonthPlayers === 0) {
-        setPercentageColor("yellow"); // No players registered
-      } else if (percentage > 0) {
-        setPercentageColor("green"); // Growth
-      } else {
-        setPercentageColor("yellow"); // No growth, warning state
-      }
-    } catch (error) {
-      console.error(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const groupPlayersByMonth = (players: Player[]): MonthData[] => {
+      const months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+
+      const playersByMonth: MonthData[] = months.map((month) => ({
+        name: month,
+        value: 0,
+      }));
+
+      players.forEach((player) => {
+        const playerDate = new Date(player.createdAt);
+        const monthIndex = playerDate.getMonth(); // Get the month index (0-11)
+        playersByMonth[monthIndex].value += 1; // Increment the count for the respective month
+      });
+
+      return playersByMonth;
+    };
+    const fetchPlayerData = async () => {
+      const authToken = getAuthToken();
+      const headers = new Headers();
+      headers.append("Authorization", `Bearer ${authToken}`);
+
+      try {
+        const response = await fetch("http://localhost:8800/api/player", {
+          headers: headers,
+        });
+        if (!response.ok) throw new Error("Failed to fetch players data");
+
+        const playersData = await response.json();
+
+        // Group players by month using createdAt field
+        const groupedData = groupPlayersByMonth(playersData);
+        setData(groupedData);
+
+        // Calculate total players
+        const total = playersData.length;
+        setTotalPlayers(total);
+
+        // Calculate percentage change based on the last two months
+        const currentMonthPlayers =
+          groupedData[new Date().getMonth()]?.value || 0;
+        const previousMonthPlayers =
+          groupedData[new Date().getMonth() - 1]?.value || 0;
+
+        let percentage = 0;
+        if (previousMonthPlayers) {
+          percentage =
+            ((currentMonthPlayers - previousMonthPlayers) /
+              previousMonthPlayers) *
+            100;
+        }
+
+        setPercentageChange(parseFloat(percentage.toFixed(2))); // Round to 2 decimal places
+
+        // Adjust percentage color based on growth or no growth
+        if (currentMonthPlayers === 0 && previousMonthPlayers === 0) {
+          setPercentageColor("yellow"); // No players registered
+        } else if (percentage > 0) {
+          setPercentageColor("green"); // Growth
+        } else {
+          setPercentageColor("yellow"); // No growth, warning state
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error(error.message);
+        } else {
+          console.error("An unknown error occurred");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchPlayerData(); // Fetch data when component mounts
   }, []);
 

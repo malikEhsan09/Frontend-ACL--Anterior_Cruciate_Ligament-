@@ -1,7 +1,22 @@
 "use client";
 import AccordionItem from "./AccordionItem"; // Assuming you use an accordion-like UI for notifications
 
-const NotificationDropdown = ({
+interface Notification {
+  _id: string;
+  feedbackId: string;
+  isRead: boolean;
+  message: string;
+  time: string;
+}
+
+interface NotificationDropdownProps {
+  notifications: Notification[];
+  onMarkAsRead: (id: string) => void;
+  onMarkAllAsRead: () => void;
+  onOpenFeedback: (id: string) => void;
+}
+
+const NotificationDropdown: React.FC<NotificationDropdownProps> = ({
   notifications,
   onMarkAsRead,
   onMarkAllAsRead,

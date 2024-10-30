@@ -2,7 +2,16 @@
 "use client";
 import React from "react";
 
-const StatsCard = ({
+interface StatsCardProps {
+  title: string;
+  value: string | number;
+  description: string;
+  percentageChange: string;
+  bgColor: string;
+  icon: React.ReactNode;
+}
+
+const StatsCard: React.FC<StatsCardProps> = ({
   title,
   value,
   description,
