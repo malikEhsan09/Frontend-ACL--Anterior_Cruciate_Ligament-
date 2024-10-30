@@ -1,6 +1,20 @@
 "use client";
 
-const AccordionItem = ({ notification, onMarkAsRead, onOpenFeedback }) => {
+interface Notification {
+  _id: string;
+  feedbackId: string;
+  isRead: boolean;
+  message: string;
+  time: string;
+}
+
+interface AccordionItemProps {
+  notification: Notification;
+  onMarkAsRead: (id: string) => void;
+  onOpenFeedback: (id: string) => void;
+}
+
+const AccordionItem: React.FC<AccordionItemProps> = ({ notification, onMarkAsRead, onOpenFeedback }) => {
   const handleRead = () => {
     onMarkAsRead(notification._id); // Mark this notification as read
   };
