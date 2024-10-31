@@ -216,28 +216,31 @@ export default function Component() {
               </p>
             )}
             {doctors.map((doctor) => (
-  <div
-    key={doctor.id}
-    className="flex items-center justify-between mb-4 p-2 rounded-lg transition-colors duration-300 hover:bg-gray-100"
-  >
-    <div className="flex items-center">
-      <Avatar className="h-10 w-10 mr-3">
-        <AvatarImage src={doctor.image} alt={doctor.name} />
-        <AvatarFallback>
-          {doctor.name.split(" ").map((n) => n[0]).join("")}
-        </AvatarFallback>
-      </Avatar>
-      <div>
-        <p className="font-semibold">{doctor.name}</p>
-        <p className="text-sm text-gray-500">{doctor.specialty}</p>
-      </div>
-    </div>
-    <div className="flex items-center">
-      <span className="text-yellow-500 mr-1">★</span>
-      <span>{doctor.rating}</span>
-    </div>
-  </div>
-))}
+              <div
+                key={doctor.id}
+                className="flex items-center justify-between mb-4 p-2 rounded-lg transition-colors duration-300 hover:bg-gray-100"
+              >
+                <div className="flex items-center">
+                  <Avatar className="h-10 w-10 mr-3">
+                    <AvatarImage src={doctor.image} alt={doctor.name} />
+                    <AvatarFallback>
+                      {doctor.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-semibold">{doctor.name}</p>
+                    <p className="text-sm text-gray-500">{doctor.specialty}</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-yellow-500 mr-1">★</span>
+                  <span>{doctor.rating}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </DialogContent>
       </Dialog>
