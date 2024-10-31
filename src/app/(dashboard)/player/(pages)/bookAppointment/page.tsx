@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
-  X,
   Calendar as CalendarIcon,
   User,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,7 +25,7 @@ type Doctor = {
   image: string;
 };
 
-export default function BookAppointment() {
+export default function Component() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,43 +46,36 @@ export default function BookAppointment() {
     "December",
   ];
 
-  // Mock & static data for the doctor we can change this
   const doctors: Doctor[] = [
     {
       id: 1,
       name: "Dr. Ehsan Ahmed",
       specialty: "Physiotherapist",
       rating: 4.9,
-      image: "/placeholder.svg?height=40&width=40",
+      image: "https://i.pravatar.cc/100",
     },
     {
-      id: 2,
+      id: 1,
       name: "Dr. Ehsan Ahmed",
       specialty: "Physiotherapist",
       rating: 4.9,
-      image: "/placeholder.svg?height=40&width=40",
+      image: "https://i.pravatar.cc/100",
     },
     {
-      id: 3,
+      id: 1,
       name: "Dr. Ehsan Ahmed",
       specialty: "Physiotherapist",
       rating: 4.9,
-      image: "/placeholder.svg?height=40&width=40",
+      image: "https://i.pravatar.cc/100",
     },
     {
-      id: 4,
+      id: 1,
       name: "Dr. Ehsan Ahmed",
       specialty: "Physiotherapist",
       rating: 4.9,
-      image: "/placeholder.svg?height=40&width=40",
+      image: "https://i.pravatar.cc/100",
     },
-    {
-      id: 5,
-      name: "Dr. Ehsan Ahmed",
-      specialty: "Physiotherapist",
-      rating: 4.9,
-      image: "/placeholder.svg?height=40&width=40",
-    },
+    // Additional mock data...
   ];
 
   const getDaysInMonth = (date: Date) => {
@@ -98,7 +91,6 @@ export default function BookAppointment() {
     const firstDayOfMonth = getFirstDayOfMonth(currentDate);
     const days = [];
 
-    // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDayOfMonth; i++) {
       days.push(
         <div
@@ -108,7 +100,6 @@ export default function BookAppointment() {
       );
     }
 
-    // Add cells for each day of the month
     for (let i = 1; i <= daysInMonth; i++) {
       const date = new Date(
         currentDate.getFullYear(),
@@ -137,8 +128,7 @@ export default function BookAppointment() {
       );
     }
 
-    // Add empty cells for days after the last day of the month
-    const totalCells = 42; // 6 rows * 7 days
+    const totalCells = 42;
     const remainingCells = totalCells - days.length;
     for (let i = 0; i < remainingCells; i++) {
       days.push(
@@ -198,7 +188,7 @@ export default function BookAppointment() {
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] rounded-lg">
           <DialogHeader>
             <DialogTitle className="flex justify-between items-center">
               Doctors Available
@@ -206,10 +196,12 @@ export default function BookAppointment() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsModalOpen(false)}
+                className="rounded-full"
               >
                 <X className="h-4 w-4" />
               </Button>
             </DialogTitle>
+            <hr className="mt-2 mb-4 border-gray-300" />
           </DialogHeader>
           <div className="py-4">
             {selectedDate && (
@@ -224,31 +216,28 @@ export default function BookAppointment() {
               </p>
             )}
             {doctors.map((doctor) => (
-              <div
-                key={doctor.id}
-                className="flex items-center justify-between mb-4"
-              >
-                <div className="flex items-center">
-                  <Avatar className="h-10 w-10 mr-3">
-                    <AvatarImage src={doctor.image} alt={doctor.name} />
-                    <AvatarFallback>
-                      {doctor.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-semibold">{doctor.name}</p>
-                    <p className="text-sm text-gray-500">{doctor.specialty}</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <span className="text-yellow-500 mr-1">★</span>
-                  <span>{doctor.rating}</span>
-                </div>
-              </div>
-            ))}
+  <div
+    key={doctor.id}
+    className="flex items-center justify-between mb-4 p-2 rounded-lg transition-colors duration-300 hover:bg-gray-100"
+  >
+    <div className="flex items-center">
+      <Avatar className="h-10 w-10 mr-3">
+        <AvatarImage src={doctor.image} alt={doctor.name} />
+        <AvatarFallback>
+          {doctor.name.split(" ").map((n) => n[0]).join("")}
+        </AvatarFallback>
+      </Avatar>
+      <div>
+        <p className="font-semibold">{doctor.name}</p>
+        <p className="text-sm text-gray-500">{doctor.specialty}</p>
+      </div>
+    </div>
+    <div className="flex items-center">
+      <span className="text-yellow-500 mr-1">★</span>
+      <span>{doctor.rating}</span>
+    </div>
+  </div>
+))}
           </div>
         </DialogContent>
       </Dialog>
