@@ -28,46 +28,46 @@ export default function Reviews() {
 
   const [reviews, setReviews] = useState<Review[]>([]);
 
-  const fetchFeedbacks = async () => {
-    try {
-      const token = localStorage.getItem("authToken");
-
-      if (!token) {
-        throw new Error("Missing auth token. Please log in.");
-      }
-
-      const response = await fetch("http://localhost:8800/api/feedback/", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch feedbacks. Status: ${response.status}`
-        );
-      }
-
-      const feedbackData = await response.json();
-
-      // Filter valid reviews to ensure there are no empty or invalid ones
-      const validReviews = feedbackData.filter(
-        (review: Review) => review.username && review.description
-      );
-
-      if (validReviews.length > 0) {
-        setReviews(validReviews); // Store only valid reviews
-      } else {
-        setReviews([]); // In case there are no valid reviews, ensure empty state
-      }
-    } catch (error) {
-      console.error("Error fetching feedback:", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchFeedbacks = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+
+        if (!token) {
+          throw new Error("Missing auth token. Please log in.");
+        }
+
+        const response = await fetch("http://localhost:8800/api/feedback/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch feedbacks. Status: ${response.status}`
+          );
+        }
+
+        const feedbackData = await response.json();
+
+        // Filter valid reviews to ensure there are no empty or invalid ones
+        const validReviews = feedbackData.filter(
+          (review: Review) => review.username && review.description
+        );
+
+        if (validReviews.length > 0) {
+          setReviews(validReviews); // Store only valid reviews
+        } else {
+          setReviews([]); // In case there are no valid reviews, ensure empty state
+        }
+      } catch (error) {
+        console.error("Error fetching feedback:", error);
+      }
+    };
+
     fetchFeedbacks();
   }, []);
 
@@ -374,4 +374,7 @@ export default function Reviews() {
       )}
     </div>
   );
+}
+function fetchFeedbacks() {
+  throw new Error("Function not implemented.");
 }
