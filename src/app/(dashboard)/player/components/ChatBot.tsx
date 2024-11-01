@@ -461,7 +461,7 @@ export default function ChatbotWithIcon() {
                     </div>
                   ) : (
                     <Avatar>
-                      <AvatarImage src="" alt="User" />
+                      <AvatarImage src="i.pravatar.cc" alt="User" />
                       <AvatarFallback>U</AvatarFallback>
                     </Avatar>
                   )}
