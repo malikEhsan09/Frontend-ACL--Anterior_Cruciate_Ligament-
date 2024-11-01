@@ -3,7 +3,7 @@ import Sidebar from "./components/Sidebar.jsx";
 import Topbar from "./components/Topbar.jsx";
 import { Inter } from "next/font/google";
 import React, { useEffect, useState } from "react";
-import { usePathname } from "next/navigation"; // Import usePathname
+import { usePathname } from "next/navigation";
 import "../../globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
