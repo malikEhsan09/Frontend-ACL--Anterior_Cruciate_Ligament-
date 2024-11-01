@@ -317,15 +317,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BsRobot } from "react-icons/bs";
-import {
-  ThumbsUp,
-  ThumbsDown,
-  RefreshCw,
-  Send,
-  MessageSquare,
-} from "lucide-react";
+import { ThumbsUp, ThumbsDown, Send } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-
+import Image from "next/image";
+import logo from "@/public/assets/logo.svg";
 type Message = {
   id: string;
   role: "ai" | "user";
@@ -410,7 +405,7 @@ export default function ChatbotWithIcon() {
   }, [messages]);
 
   return (
-    <>
+    <div className="h-screen flex items-center justify-center bg-gray-100">
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button
@@ -420,23 +415,26 @@ export default function ChatbotWithIcon() {
             <BsRobot className="h-8 w-8" />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px] p-0">
-          <Card className="w-full shadow-lg rounded-lg overflow-hidden ">
+        <DialogContent className="sm:max-w-[425px] p-0 w-[500px] h-[450px] rounded-3xl overflow-hidden">
+          <Card className="w-full h-full shadow-lg rounded-3xl overflow-hidden flex flex-col ">
             <CardHeader className="px-6 py-3 flex justify-between items-center">
               <CardTitle className="text-xl font-semibold flex items-center gap-2">
-                <MessageSquare className="h-6 w-6 text-onHover" />
+                {/* <MessageSquare className="h-6 w-6 text-onHover" /> */}
+                <Image src={logo} width={40} height={50} alt="chatBot iamge" />
                 AI Health Assistant (ChatBot)
               </CardTitle>
             </CardHeader>
             <div className="px-6 py-2 border-b">
-              <p className="text-sm text-gray-500 mb-2">Example questions:</p>
-              <div className="flex flex-wrap gap-2">
+              <p className="text-sm text-gray-500 mb-2 text-center">
+                Example questions:
+              </p>
+              <div className="px-6 py-3 border-b flex items-center space-x-4  whitespace-nowrap">
                 {exampleQuestions.map((question, index) => (
                   <Button
                     key={index}
                     variant="outline"
                     size="sm"
-                    className="text-xs"
+                    className="text-xs flex items-center gap-1"
                     onClick={() => handleSend(question)}
                   >
                     {question}
@@ -445,8 +443,8 @@ export default function ChatbotWithIcon() {
               </div>
             </div>
             <CardContent
-              id="chat-content overflow-y-visible"
-              className="p-6 space-y-4 max-h-[60vh] overflow-y-auto"
+              id="chat-content"
+              className="flex-grow p-6 space-y-4 overflow-y-auto"
             >
               {messages.map((message) => (
                 <div key={message.id} className="flex items-start gap-3">
@@ -463,7 +461,7 @@ export default function ChatbotWithIcon() {
                     </div>
                   ) : (
                     <Avatar>
-                      <AvatarImage src="/placeholder-avatar.jpg" alt="User" />
+                      <AvatarImage src="" alt="User" />
                       <AvatarFallback>U</AvatarFallback>
                     </Avatar>
                   )}
@@ -505,15 +503,6 @@ export default function ChatbotWithIcon() {
                 </div>
               )}
             </CardContent>
-            <div className="px-6 py-4">
-              <Button
-                variant="outline"
-                className="w-full justify-center rounded-full bg-white"
-              >
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Regenerate Response
-              </Button>
-            </div>
             <CardFooter className="p-4 flex flex-col gap-4">
               <div className="relative w-full">
                 <Input
@@ -535,6 +524,6 @@ export default function ChatbotWithIcon() {
           </Card>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }
