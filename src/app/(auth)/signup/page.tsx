@@ -4,18 +4,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
-import {
-  FaUserCircle,
-  FaGoogle,
-  FaFacebook,
-  FaUserMd,
-  FaUserTie,
-  FaRunning,
-  FaCheckCircle,
-} from "react-icons/fa";
+import { FaUserCircle, FaGoogle, FaFacebook, FaUserMd, FaUserTie, FaRunning, FaCheckCircle, FaEye, FaEyeSlash } from "react-icons/fa"; // Import Eye Icons
 import football from "@/public/assets/football.svg";
 import Link from "next/link";
 import axios from "axios";
+import DoctorForm from "./form/doctor-form";
 
 export default function Signup() {
   const router = useRouter();
@@ -25,19 +18,21 @@ export default function Signup() {
     password: "",
     userType: "Player",
     isAdmin: false, // Default isAdmin to false
+    medicalLicenseNo: "",
+    specialization: "",
+    phoneNumber: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [open, setOpen] = useState(false);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const strongPasswordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // Set isAdmin to true when userType is Admin, otherwise false
     setFormData({
       ...formData,
       [name]: value,
@@ -61,17 +56,17 @@ export default function Signup() {
       return;
     }
 
+    if (
+      formData.userType === "Doctor" &&
+      (!formData.medicalLicenseNo || !formData.specialization || !formData.phoneNumber)
+    ) {
+      setError("Please provide all required fields for doctor registration.");
+      return;
+    }
+
     try {
-      const response = await axios.post(
-        "http://localhost:8800/api/auth/register",
-        {
-          userName: formData.userName,
-          email: formData.email,
-          password: formData.password,
-          userType: formData.userType,
-          isAdmin: formData.isAdmin,
-        }
-      );
+      const response = await axios.post("http://localhost:8800/api/auth/register", formData);
+      console.log(response)
 
       setSuccess(true);
       setOpen(true);
@@ -127,8 +122,7 @@ export default function Signup() {
             Let’s empower your financial task today with Findash.
           </h2>
           <p className="text-lg">
-            The one-stop platform for all financial management of small and
-            medium-sized businesses.
+            The one-stop platform for all financial management of small and medium-sized businesses.
           </p>
         </div>
       </div>
@@ -136,20 +130,14 @@ export default function Signup() {
       {/* Right side with signup form */}
       <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-6 lg:p-10">
         <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
-          <h2 className="text-3xl font-bold mb-6 text-center">
-            Create New Account
-          </h2>
-          <p className="text-center text-gray-600 mb-6">
-            Please register by filling in your personal data
-          </p>
+          <h2 className="text-3xl font-bold mb-6 text-center">Create New Account</h2>
+          <p className="text-center text-gray-600 mb-6">Please register by filling in your personal data</p>
 
           {/* Form start */}
           <form onSubmit={handleSubmit}>
             {/* Username Field */}
             <div className="mb-4 relative">
-              <label className="block text-2xl text-gray-700 text-sm font-bold mb-2">
-                Username
-              </label>
+              <label className="block text-2xl text-gray-700 font-bold mb-2">Username</label>
               <div className="relative flex items-center">
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
                   <FaUserCircle className="w-6 h-6" />
@@ -167,9 +155,7 @@ export default function Signup() {
 
             {/* Email Field */}
             <div className="mb-4 relative">
-              <label className="block text-2xl text-gray-700 text-sm font-bold mb-2">
-                Email
-              </label>
+              <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
               <div className="relative flex items-center">
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
                   <MdEmail className="w-6 h-6" />
@@ -188,9 +174,7 @@ export default function Signup() {
 
             {/* User Type Field */}
             <div className="mb-4 relative">
-              <label className="block text-2xl text-gray-700 text-sm font-bold mb-2">
-                User Type
-              </label>
+              <label className="block text-gray-700 text-sm font-bold mb-2">User Type</label>
               <div className="relative flex items-center">
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
                   {renderUserTypeIcon()}
@@ -211,27 +195,34 @@ export default function Signup() {
 
             {/* Password Field */}
             <div className="mb-6 relative">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Password
-              </label>
+              <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
               <div className="relative flex items-center">
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
                   <RiLockPasswordFill className="w-6 h-6" />
                 </span>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"} // Toggle password visibility
                   name="password"
                   placeholder="********"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full text-[18px] pl-12 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm transition duration-200 text-lg"
+                  className="w-full text-[18px] pl-12 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm transition duration-200 text-lg"
                   style={{ paddingLeft: "3rem" }}
                 />
+                <span
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-gray-500"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash className="w-6 h-6" /> : <FaEye className="w-6 h-6" />}
+                </span>
               </div>
             </div>
 
+            {/* Conditional Doctor Form */}
+            {formData.userType === "Doctor" && <DoctorForm formData={formData} handleChange={handleChange} />}
+
             {error && <p className="text-red-500 mb-4">{error}</p>}
-            <button className="w-full bg-gray-700 text-white py-3 rounded-lg hover:bg-gray-800 font-semibold text-[16px] transition duration-200 shadow-md text-lg hover:cursor-pointer">
+            <button className="w-full bg-buttonColor text-white py-3 rounded-lg hover:bg-onHover/900 font-semibold text-[16px] transition duration-200 shadow-md text-lg hover:cursor-pointer">
               Continue
             </button>
           </form>
