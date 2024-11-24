@@ -4,13 +4,14 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
+import { FaEye, FaEyeSlash, FaGoogle, FaFacebook, FaCheckCircle } from "react-icons/fa"; // Import necessary icons
 import football from "@/public/assets/football.svg";
 import Link from "next/link";
-import { FaCheckCircle, FaGoogle, FaFacebook } from "react-icons/fa"; // Import Google and Facebook icons
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
   const [alertMessage, setAlertMessage] = useState("");
   const [open, setOpen] = useState(false); // For custom alert
   const [success, setSuccess] = useState(false); // For determining alert type
@@ -19,10 +20,7 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const loginData = {
-      email,
-      password,
-    };
+    const loginData = { email, password };
 
     try {
       const response = await fetch("http://localhost:8800/api/auth/login", {
@@ -34,13 +32,10 @@ export default function Login() {
       });
 
       const data = await response.json();
-      console.log("Login response data: ", data); // Check the response data
 
       if (response.ok) {
-        console.log("Storing user data in localStorage:", data.user._id);
-
         // Store the userId, userName, email, and token in localStorage
-        localStorage.setItem("userId", data.user._id.trim()); // FIX: Use _id instead of id
+        localStorage.setItem("userId", data.user._id.trim());
         localStorage.setItem("userName", data.user.userName);
         localStorage.setItem("userEmail", data.user.email);
         localStorage.setItem("authToken", data.token);
@@ -56,21 +51,19 @@ export default function Login() {
         setTimeout(() => {
           setOpen(false);
           if (userType === "Player") {
-            router.push("/player/"); // Redirect to Player dashboard
+            router.push("/player/");
           } else if (userType === "Admin" && isAdmin) {
-            router.push("/admin"); // Redirect to Admin dashboard
+            router.push("/admin");
           } else if (userType === "Doctor") {
-            router.push("/doctor"); // Redirect to Doctor dashboard
+            router.push("/doctor");
           }
         }, 2000);
       } else {
-        console.error("Login failed:", data.message);
         setAlertMessage(data.message || "Login failed. Please try again.");
         setSuccess(false);
         setOpen(true);
       }
     } catch (error) {
-      console.error("Error during login:", error);
       setAlertMessage("An error occurred. Please try again.");
       setSuccess(false);
       setOpen(true);
@@ -79,7 +72,6 @@ export default function Login() {
 
   // Google OAuth handler
   const handleGoogleOAuth = () => {
-    // Redirect user to your backend OAuth route
     window.location.href = "http://localhost:8800/api/auth/google";
   };
 
@@ -132,7 +124,6 @@ export default function Login() {
                   type="email"
                   placeholder="youname@gmail.com"
                   className="w-full text-[18px] pl-12 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm transition duration-200 text-lg"
-                  style={{ paddingLeft: "3rem" }}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
@@ -146,12 +137,17 @@ export default function Login() {
                   <RiLockPasswordFill className="w-6 h-6" />
                 </span>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"} // Toggle password visibility
                   placeholder="********"
-                  className="w-full text-[18px] pl-12 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm transition duration-200 text-lg"
-                  style={{ paddingLeft: "3rem" }}
+                  className="w-full text-[18px] pl-12 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-sm transition duration-200 text-lg"
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <span
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-gray-500"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash className="w-6 h-6" /> : <FaEye className="w-6 h-6" />}
+                </span>
               </div>
             </div>
             <div className="flex items-center justify-between mb-6">
@@ -165,7 +161,7 @@ export default function Login() {
                 </a>
               </Link>
             </div>
-            <button className="w-full bg-gray-700 text-white py-3 rounded-lg hover:bg-gray-800 font-semibold text-[16px] transition duration-200 shadow-md text-lg hover:cursor-pointer">
+            <button className="w-full bg-buttonColor text-white py-3 rounded-lg hover:bg-onHover font-semibold text-[16px] transition duration-200 shadow-md text-lg hover:cursor-pointer">
               Login
             </button>
           </form>
