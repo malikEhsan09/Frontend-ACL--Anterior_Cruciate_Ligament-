@@ -2,7 +2,6 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 
-// Removed unused 'Club' interface
 
 export default function RecentActivities() {
   // State to manage activities from the backend
@@ -31,13 +30,17 @@ export default function RecentActivities() {
     // Function to fetch club data from the API
     const fetchClubActivities = async () => {
       const authToken = getAuthToken();
+      // console.log("Football API checkin the token ",authToken)
       const headers = new Headers();
       headers.append("Authorization", `Bearer ${authToken}`);
 
       try {
         const response: Response = await fetch(
           "http://localhost:8800/api/club",
-          {}
+          {
+            method: "GET",
+            headers: headers
+          }
         );
         if (!response.ok) throw new Error("Failed to fetch club activities");
         const clubData = await response.json();
