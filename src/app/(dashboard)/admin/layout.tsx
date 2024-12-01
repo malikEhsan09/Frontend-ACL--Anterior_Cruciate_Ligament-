@@ -1,6 +1,6 @@
 "use client";
-import Sidebar from "./components/Sidebar.jsx";
-import Topbar from "./components/Topbar.jsx";
+import Sidebar from "./components/Sidebar";
+import Topbar from "./components/Topbar";
 import { Inter } from "next/font/google";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
