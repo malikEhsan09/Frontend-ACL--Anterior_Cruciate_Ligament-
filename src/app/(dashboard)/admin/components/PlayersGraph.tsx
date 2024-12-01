@@ -304,7 +304,7 @@ const PlayersGraph = () => {
             </div>
           </div>
           <div className="flex space-x-2 items-center">
-            <select className="border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300">
+            <select className="border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-onHover border-gray-300">
               <option>All Time</option>
               <option>Last Year</option>
               <option>Last Month</option>

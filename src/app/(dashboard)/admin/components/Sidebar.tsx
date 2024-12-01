@@ -211,28 +211,35 @@ import {
   ChevronLeft,
   ChevronRight,
   LogOut,
-  Grid,
   Users,
-  Briefcase,
   Wrench,
-  Store,
-  Package,
-  Tag,
-  Image as ImageIcon,
   BarChart,
   AlertCircle,
+  LayoutDashboard,
+  Dumbbell,
+  ScanEye
 } from "lucide-react"; // Importing icons from lucide-react
+import { FaUserDoctor } from "react-icons/fa6";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import logo from "@/public/assets/logo.svg"; // Closed sidebar logo
-import sidebarOpenLogo from "@/public/assets/sidebarLogoOpen.svg"; // Open sidebar logo
+// import sidebarOpenLogo from "@/public/assets/sidebarLogoOpen.svg"; // Open sidebar logo
 import "./sidebar.css";
+import { PiSoccerBallFill } from "react-icons/pi";
+import { GiSoccerKick } from "react-icons/gi";
 
-const Sidebar = ({ isCollapsed: initialCollapsed = false, onToggle }) => {
+interface SidebarProps {
+  isCollapsed?: boolean;
+  onToggle: (collapsed: boolean) => void;
+}
+
+const Sidebar = ({ isCollapsed: initialCollapsed = false, onToggle }:SidebarProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(initialCollapsed);
+  const [activePath, setActivePath] = useState<string>("/admin/");
+
 
   // Toggle collapse state
   const toggleSidebar = () => {
@@ -241,8 +248,9 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false, onToggle }) => {
     onToggle(newCollapsed); // Inform parent layout of sidebar collapse state
   };
 
-  const handleNavigation = (path) => {
+  const handleNavigation = (path : string) => {
     router.push(path); // Navigate to the chosen path
+    setActivePath(path)
   };
 
   const handleLogout = async () => {
@@ -279,14 +287,14 @@ const Sidebar = ({ isCollapsed: initialCollapsed = false, onToggle }) => {
   }, []);
 
   const menuItems = [
-    { name: "Dashboard", icon: <Grid />, path: "/admin/" },
-    { name: "Exercises", icon: <Briefcase />, path: "/admin/exercises" },
+    { name: "Dashboard", icon: <LayoutDashboard />, path: "/admin/" },
+    { name: "Exercises", icon: <Dumbbell />, path: "/admin/exercises" },
     { name: "Admins", icon: <Users />, path: "/admin/admins" },
     { name: "Settings", icon: <Wrench />, path: "/admin/settings" },
-    { name: "Players", icon: <Store />, path: "/admin/players" },
-    { name: "Clubs", icon: <Package />, path: "/admin/clubs" },
-    { name: "Doctor", icon: <Tag />, path: "/admin/doctor" },
-    { name: "Reviews", icon: <ImageIcon />, path: "/admin/reviews" },
+    { name: "Players", icon: <GiSoccerKick size={26}  fontSize={22}/>, path: "/admin/players" },
+    { name: "Clubs", icon: < PiSoccerBallFill size={22} />, path: "/admin/clubs" },
+    { name: "Doctor", icon: <FaUserDoctor size={22} />, path: "/admin/doctors" },
+    { name: "Reviews", icon: <ScanEye />, path: "/admin/reviews" },
     { name: "Statistics", icon: <BarChart />, path: "/admin/statistics" },
     { name: "Complaints", icon: <AlertCircle />, path: "/admin/complaints" },
   ];

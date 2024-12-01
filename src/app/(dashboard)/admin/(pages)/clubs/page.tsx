@@ -351,7 +351,7 @@ const Clubs = () => {
             <h2 className="text-xl font-bold text-gray-800">Clubs</h2>
           </div>
           <button
-            className="text-md font-semibold px-2 p-1 rounded-md text-white bg-lightBlue mt-1 ml-3 hover:cursor-pointer hover:bg-[#4681BCFF ] "
+            className="text-md font-semibold px-2 p-1 rounded-md text-white bg-lightBlue mt-1 ml-3 hover:cursor-pointer hover:bg-onHover "
             onClick={() => setIsModalOpen(true)}
           >
             Add Club
