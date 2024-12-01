@@ -1,10 +1,10 @@
 "use client";
 import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
-import StatsCard from "./components/StatsCard.jsx";
+import StatsCard from "./components/StatsCard";
 
 // Dynamically import PlayersGraph with SSR disabled
-const PlayersGraph = dynamic(() => import("./components/PlayersGraph.jsx"), {
+const PlayersGraph = dynamic(() => import("./components/PlayersGraph"), {
   ssr: false, // Disable server-side rendering for the chart component
 });
 
