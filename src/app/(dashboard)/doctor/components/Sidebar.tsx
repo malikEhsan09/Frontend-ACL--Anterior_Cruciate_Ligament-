@@ -81,8 +81,8 @@ const Sidebar = ({
       path: "/doctor/",
     },
     {
-      name: "Book Appointment",
-      icon: <FaBookmark size={22} />,
+      name: "Appointment Schedule",
+      icon: <FaBookmark size={22} />, 
       path: "/doctor/appointment",
     },
     {
@@ -125,7 +125,7 @@ const Sidebar = ({
               />
             </div>
             {!isCollapsed && (
-              <div className="text-[#fff] text-center mt-2 text-lg font-bold">
+              <div className="text-[#fff] text-center mt-2 text-base font-bold">
                 ACL Tear Detector
               </div>
             )}
